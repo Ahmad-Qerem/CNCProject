@@ -1,0 +1,4 @@
+
+SpeechRecognition
+python3-pyaudio
+flac

@@ -1,0 +1,21 @@
+install python 3 :
+sudo update-alternatives --install /usr/bin/python python/user/bin/python3 10
+
+check default version :
+python --version
+
+install python idle 3 tool : ==> y to continue
+sudo install python3 idle3
+
+to install speech recognition :
+pip install SpeechRecognition
+
+to install pyaudio :
+sudo apt-get install python-pyaudio python3-pyaudio
+
+install flac encoder :
+sudo apt-get install flac
+........................................
+to use mobile phone camera :
+1. install webcam app from Google Play Store (https://play.google.com/store/apps/details?id=com.pas.webcam&hl=en_US&gl=US&pli=1)
+2. install opencv2 library
