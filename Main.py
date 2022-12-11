@@ -1,13 +1,3 @@
-#to connect the bluetooth write the fowlloing:
-#$ hcitool scan
-# this will show the bluetooth mac addres that connected
-#sudo rfcomm connect hci0 <Mac Address> 1
-#where <Mac Address> from the first command
-
-#to install serial library
-#$ sudo pip3 install pyserial
-
-
 import serial
 import speech_recognition as sr
 from datetime import date
