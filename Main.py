@@ -15,21 +15,16 @@ try :
             audio = r.listen(source)
         words = r.recognize_google(audio)
         print(words)
-
         if words == "today":
             print(date.today())
-
         if words == "home":
             print("Set CNC Homing Command")
             x = "$X\r \n"
             BlueToothSerial.write(x.encode("utf-8"))
             sleep(1)
-
             x = "$H\r \n"
             BlueToothSerial.write(x.encode("utf-8"))
             sleep(1)
-
-
         if words == "exit":
             print("...")
             sleep(1)
@@ -39,15 +34,3 @@ try :
             sleep(1)
             print("Goodbye")
             break
-
-
-
-
-
-
-
-
-
-
-
-
