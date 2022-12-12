@@ -5,10 +5,13 @@ from time import sleep
 import cv2
 
 GlobalWord=""
-
+Flag=True
 #what to do after each voice recognitions
 def callBack(recognizer, audio ):
+    global GlobalWord
     GlobalWord=recognizer.recognize_google(audio)
+    global Flag
+    Flag=True
     print(GlobalWord)
 
 #connincting bluetooth with hc05 module at comm port 7 with 115200 baudrate
@@ -26,40 +29,47 @@ with mic as source:
 recognizer.listin_inBackground(mic,callBack)
 
 #Main program start here
-while True:
+def main():
+    while True:
+        global Flag
+        if GlobalWord == "today" and Flag:
+            Flag=False
+            print(date.today())
 
-    if GlobalWord == "today":
-        print(date.today())
+        if GlobalWord == "home" and Flag:
+            Flag = False
+            print("Set CNC Homing Command")
+            x = "$X\r \n"
+            BlueToothSerial.write(x.encode("utf-8"))
+            sleep(1)
 
-    if GlobalWord == "home":
-        print("Set CNC Homing Command")
-        x = "$X\r \n"
-        BlueToothSerial.write(x.encode("utf-8"))
-        sleep(1)
+            x = "$H\r \n"
+            BlueToothSerial.write(x.encode("utf-8"))
+            sleep(1)
 
-        x = "$H\r \n"
-        BlueToothSerial.write(x.encode("utf-8"))
-        sleep(1)
+        if GlobalWord == "camera" and Flag:
+            Flag = False
+            print("Connecting camera ... ")
+            captchaer = cv2.VideoCapture("http://192.168.1.9:8080/video")
+            print("Connected")
+            while True:
+                _, frame = captchaer.read()
+                cv2.imshow("test", frame)
+                if cv2.waitKey(1) == ord('q'):
+                    break
+            captchaer.release()
+            cv2.destroyAllWindows()
+            print("Camera Disconnected")
 
-    if GlobalWord == "camera":
-        print("Connecting camera ... ")
-        captchaer = cv2.VideoCapture("http://192.168.1.9:8080/video")
-        print("Connected")
-        while True:
-            _, frame = captchaer.read()
-            cv2.imshow("test", frame)
-            if cv2.waitKey(1) == ord('q'):
-                break
-        captchaer.release()
-        cv2.destroyAllWindows()
-        print("Camera Disconnected")
+        if GlobalWord == "exit":
+            print("...")
+            sleep(1)
+            print("...")
+            sleep(1)
+            print("...")
+            sleep(1)
+            print("Goodbye")
+            break
 
-    if GlobalWord == "exit":
-        print("...")
-        sleep(1)
-        print("...")
-        sleep(1)
-        print("...")
-        sleep(1)
-        print("Goodbye")
-        break
+if __name__ == "__main__":
+    main()
