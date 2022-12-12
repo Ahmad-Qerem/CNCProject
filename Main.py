@@ -1,54 +1,68 @@
-#to connect the bluetooth write the fowlloing:
-#$ hcitool scan
-# this will show the bluetooth mac addres that connected
-#sudo rfcomm connect hci0 <Mac Address> 1
-#where <Mac Address> from the first command
-
-#to install serial library
-#$ sudo pip3 install pyserial
-
-
 import serial
 import speech_recognition as sr
 from datetime import date
 from time import sleep
+import cv2
 
+GlobalWord=""
+
+#what to do after each voice recognitions
+def callBack(recognizer, audio ):
+    GlobalWord=recognizer.recognize_google(audio)
+    print(GlobalWord)
+
+#connincting bluetooth with hc05 module at comm port 7 with 115200 baudrate
 BlueToothSerial = serial.Serial("/dev/rfcomm7",115200)
 print("BlueTooth Connected")
 
-r = sr.Recognizer()
+recognizer = sr.Recognizer()
 mic = sr.Microphone()
 print("Connect Recognizer")
-try :
-    while 1:
-        with mic as source:
-            audio = r.listen(source)
-        words = r.recognize_google(audio)
-        print(words)
 
-        if words == "today":
-            print(date.today())
+#Remove noise from the background
+with mic as source:
+    recognizer.adjust_for_ambient_noise(source)
+#Start thread for voice recognition
+recognizer.listin_inBackground(mic,callBack)
 
-        if words == "home":
-            print("Set CNC Homing Command")
-            x = "$X\r \n"
-            BlueToothSerial.write(x.encode("utf-8"))
-            sleep(1)
+#Main program start here
+while True:
 
-            x = "$H\r \n"
-            BlueToothSerial.write(x.encode("utf-8"))
-            sleep(1)
+    if GlobalWord == "today":
+        print(date.today())
 
+    if GlobalWord == "home":
+        print("Set CNC Homing Command")
+        x = "$X\r \n"
+        BlueToothSerial.write(x.encode("utf-8"))
+        sleep(1)
 
-        if words == "exit":
-            print("...")
-            sleep(1)
-            print("...")
-            sleep(1)
-            print("...")
-            sleep(1)
-            print("Goodbye")
-            break
+        x = "$H\r \n"
+        BlueToothSerial.write(x.encode("utf-8"))
+        sleep(1)
+
+    if GlobalWord == "camera":
+        print("Connecting camera ... ")
+        captchaer = cv2.VideoCapture("http://192.168.1.9:8080/video")
+        print("Connected")
+        while True:
+            _, frame = captchaer.read()
+            cv2.imshow("test", frame)
+            if cv2.waitKey(1) == ord('q'):
+                break
+        captchaer.release()
+        cv2.destroyAllWindows()
+        print("Camera Disconnected")
+
+    if GlobalWord == "exit":
+        print("...")
+        sleep(1)
+        print("...")
+        sleep(1)
+        print("...")
+        sleep(1)
+        print("Goodbye")
+        break
 
 
 
