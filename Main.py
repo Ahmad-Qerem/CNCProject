@@ -26,7 +26,7 @@ print("Connect Recognizer")
 with mic as source:
     recognizer.adjust_for_ambient_noise(source)
 #Start thread for voice recognition
-recognizer.listen_in_background(mic,callBack)
+ThreadInBackGround = recognizer.listen_in_background(mic,callBack)
 
 #Main program start here
 def main():
@@ -50,18 +50,19 @@ def main():
         if GlobalWord == "camera" and Flag:
             Flag = False
             print("Connecting camera ... ")
-            captchaer = cv2.VideoCapture("http://192.168.1.9:8080/video")
+            captchaer = cv2.VideoCapture("http://192.168.1.6:8080/video")
             print("Connected")
             while True:
                 _, frame = captchaer.read()
                 cv2.imshow("test", frame)
-                if cv2.waitKey(1) == ord('q'):
+                if cv2.waitKey(1) == ord('q') or GlobalWord == "disconnect":
                     break
             captchaer.release()
             cv2.destroyAllWindows()
             print("Camera Disconnected")
 
-        if GlobalWord == "exit":
+        if GlobalWord == "exit" and Flag:
+            ThreadInBackGround()
             print("...")
             sleep(1)
             print("...")
