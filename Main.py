@@ -26,7 +26,7 @@ print("Connect Recognizer")
 with mic as source:
     recognizer.adjust_for_ambient_noise(source)
 #Start thread for voice recognition
-recognizer.listin_inBackground(mic,callBack)
+recognizer.listen_in_background(mic,callBack)
 
 #Main program start here
 def main():
@@ -73,3 +73,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
