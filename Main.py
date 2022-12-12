@@ -63,15 +63,3 @@ while True:
         sleep(1)
         print("Goodbye")
         break
-
-
-
-
-
-
-
-
-
-
-
-
