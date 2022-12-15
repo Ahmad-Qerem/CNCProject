@@ -1,6 +1,7 @@
 import serial
 import speech_recognition as sr
 from datetime import date
+from AngleMeterAlpha import AngleMeterAlpha
 from time import sleep
 import cv2
 
@@ -14,6 +15,47 @@ def callBack(recognizer, audio ):
     Flag=True
     print(GlobalWord)
 
+def GetDestination():
+    angleMeter = AngleMeterAlpha()
+    angleMeter.measure()
+    PinFlag = False
+    Pin="up"
+    while True:
+        global GlobalWord
+        if GlobalWord == "disconnect":
+            break
+
+        if GlobalWord == "start" and not PinFlag:
+            PinFlag = True
+            Pin="down"
+
+        if GlobalWord == "stop" and PinFlag:
+            PinFlag = False
+            Pin="up"
+
+        x=angleMeter.get_kalman_roll()
+        y=angleMeter.get_kalman_pitch()
+        xPosition="idel"
+        yPosition = "idel"
+
+        if x<20 or x>-20:
+            xPosition = "idel"
+        elif x<80 and x>20:
+            xPosition = "forward"
+        elif x>-60 and x<-30:
+            xPosition = "backward"
+
+        if y<20 or y>-20:
+            yPosition = "idel"
+        elif y<80 and y>20:
+            yPosition = "left"
+        elif y>-60 and y<-30:
+            yPosition = "right"
+
+        print(xPosition, ",", yPosition ,Pin)
+        # print(angleMeter.get_int_roll(), angleMeter.get_int_pitch())
+        sleep(1)
+    angleMeter.StopMeasure()
 #connincting bluetooth with hc05 module at comm port 7 with 115200 baudrate
 BlueToothSerial = serial.Serial("/dev/rfcomm7",115200)
 print("BlueTooth Connected")
@@ -35,6 +77,9 @@ def main():
         if GlobalWord == "today" and Flag:
             Flag=False
             print(date.today())
+        if GlobalWord == "mode one" and Flag:
+            Flag = False
+            GetDestination()
 
         if GlobalWord == "home" and Flag:
             Flag = False
@@ -50,12 +95,12 @@ def main():
         if GlobalWord == "camera" and Flag:
             Flag = False
             print("Connecting camera ... ")
-            captchaer = cv2.VideoCapture("http://192.168.1.9:8080/video")
+            captchaer = cv2.VideoCapture("http://192.168.1.6:8080/video")
             print("Connected")
             while True:
                 _, frame = captchaer.read()
                 cv2.imshow("test", frame)
-                if GlobalWord == "disconnect":
+                if cv2.waitKey(1) == ord('q') or GlobalWord == "disconnect":
                     break
             captchaer.release()
             cv2.destroyAllWindows()
@@ -71,6 +116,10 @@ def main():
             sleep(1)
             print("Goodbye")
             break
+
+
+
+
 
 if __name__ == "__main__":
     main()
