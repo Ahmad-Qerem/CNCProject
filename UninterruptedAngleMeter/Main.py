@@ -77,7 +77,7 @@ def main():
         if GlobalWord == "today" and Flag:
             Flag=False
             print(date.today())
-        if (GlobalWord == "mode 1" or GlobalWord == "mode one") and Flag:
+        if ( GlobalWord == "mode 1" or GlobalWord == "mode one") and Flag:
             Flag = False
             GetDestination()
 
