@@ -57,7 +57,7 @@ def GetDestination():
         sleep(1)
     angleMeter.StopMeasure()
 #connincting bluetooth with hc05 module at comm port 7 with 115200 baudrate
-BlueToothSerial = serial.Serial("/dev/rfcomm7",115200)
+#BlueToothSerial = serial.Serial("/dev/rfcomm7",115200)
 print("BlueTooth Connected")
 
 recognizer = sr.Recognizer()
@@ -77,7 +77,7 @@ def main():
         if GlobalWord == "today" and Flag:
             Flag=False
             print(date.today())
-        if GlobalWord == "mode one" and Flag:
+        if (GlobalWord == "mode 1" or GlobalWord == "mode one") and Flag:
             Flag = False
             GetDestination()
 
@@ -85,11 +85,11 @@ def main():
             Flag = False
             print("Set CNC Homing Command")
             x = "$X\r \n"
-            BlueToothSerial.write(x.encode("utf-8"))
+            #BlueToothSerial.write(x.encode("utf-8"))
             sleep(1)
 
             x = "$H\r \n"
-            BlueToothSerial.write(x.encode("utf-8"))
+            #BlueToothSerial.write(x.encode("utf-8"))
             sleep(1)
 
         if GlobalWord == "camera" and Flag:

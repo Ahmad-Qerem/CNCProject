@@ -7,7 +7,7 @@
 
 
 from Kalman import KalmanAngle
-import smbus2			#import SMBus module of I2C
+import smbus as smbus2			#import SMBus module of I2C
 import time
 import math
 import threading
