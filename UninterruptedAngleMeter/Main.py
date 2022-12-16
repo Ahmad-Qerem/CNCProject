@@ -15,21 +15,28 @@ def callBack(recognizer, audio ):
     Flag=True
     print(GlobalWord)
 
+def ClearLines(NLines=1):
+    LINE_UP = '\033[1A'
+    LINE_CLEAR = '\x1b[2k'
+    for idx in range(NLines):
+        print(LINE_UP, end=LINE_CLEAR)
+
 def GetDestination():
     angleMeter = AngleMeterAlpha()
     angleMeter.measure()
     PinFlag = False
     Pin="up"
+    
     while True:
         global GlobalWord
         if GlobalWord == "disconnect":
             break
 
-        if GlobalWord == "start" and not PinFlag:
+        elif GlobalWord == "start" and not PinFlag:
             PinFlag = True
             Pin="down"
 
-        if GlobalWord == "stop" and PinFlag:
+        elif GlobalWord == "stop" and PinFlag:
             PinFlag = False
             Pin="up"
 
@@ -52,75 +59,87 @@ def GetDestination():
         elif y>-60 and y<-30:
             yPosition = "right"
 
-        print(xPosition, ",", yPosition ,Pin)
+        stringToPrint = f"X : {x}\t Y: {y}\t Pin Status : {Pin}"
+        stringToPrint2 = f"X Position : {xPosition}\t Y Position: {yPosition}\t Pin Status : {Pin}"
+        print('-' * len(stringToPrint2))
+        print(stringToPrint)
+        print(stringToPrint2)
+        sleep(0.3)
+        ClearLines(3)
         # print(angleMeter.get_int_roll(), angleMeter.get_int_pitch())
         sleep(1)
     angleMeter.StopMeasure()
-#connincting bluetooth with hc05 module at comm port 7 with 115200 baudrate
-#BlueToothSerial = serial.Serial("/dev/rfcomm7",115200)
-print("BlueTooth Connected")
-
-recognizer = sr.Recognizer()
-mic = sr.Microphone()
-print("Connect Recognizer")
-
-#Remove noise from the background
-with mic as source:
-    recognizer.adjust_for_ambient_noise(source)
-#Start thread for voice recognition
-ThreadInBackGround = recognizer.listen_in_background(mic,callBack)
 
 #Main program start here
 def main():
     while True:
-        global Flag
-        if GlobalWord == "today" and Flag:
-            Flag=False
-            print(date.today())
-        if ( GlobalWord == "mode 1" or GlobalWord == "mode one") and Flag:
-            Flag = False
-            GetDestination()
+        try:
+            # connincting bluetooth with hc05 module at comm port 7 with 115200 baudrate
+            # BlueToothSerial = serial.Serial("/dev/rfcomm7",115200)
+            print("BlueTooth Connected")
 
-        if GlobalWord == "home" and Flag:
-            Flag = False
-            print("Set CNC Homing Command")
-            x = "$X\r \n"
-            #BlueToothSerial.write(x.encode("utf-8"))
-            sleep(1)
+            recognizer = sr.Recognizer()
+            mic = sr.Microphone()
+            print("Connect Recognizer")
 
-            x = "$H\r \n"
-            #BlueToothSerial.write(x.encode("utf-8"))
-            sleep(1)
+            # Remove noise from the background
+            with mic as source:
+                recognizer.adjust_for_ambient_noise(source)
+            # Start thread for voice recognition
+            ThreadInBackGround = recognizer.listen_in_background(mic, callBack)
 
-        if GlobalWord == "camera" and Flag:
-            Flag = False
-            print("Connecting camera ... ")
-            captchaer = cv2.VideoCapture("http://192.168.1.6:8080/video")
-            print("Connected")
             while True:
-                _, frame = captchaer.read()
-                cv2.imshow("test", frame)
-                if cv2.waitKey(1) == ord('q') or GlobalWord == "disconnect":
+                global Flag
+                if GlobalWord == "today" and Flag:
+                    Flag = False
+                    print(date.today())
+
+                elif (GlobalWord == "mode 1" or GlobalWord == "mode one") and Flag:
+                    Flag = False
+                    GetDestination()
+
+                elif GlobalWord == "home" and Flag:
+                    Flag = False
+                    print("Set CNC Homing Command")
+                    x = "$X\r \n"
+                    # BlueToothSerial.write(x.encode("utf-8"))
+                    sleep(1)
+
+                    x = "$H\r \n"
+                    # BlueToothSerial.write(x.encode("utf-8"))
+                    sleep(1)
+
+                elif GlobalWord == "camera" and Flag:
+                    Flag = False
+                    print("Connecting camera ... ")
+                    captchaer = cv2.VideoCapture("http://192.168.1.6:8080/video")
+                    print("Connected")
+                    while True:
+                        _, frame = captchaer.read()
+                        cv2.imshow("test", frame)
+                        if cv2.waitKey(1) == ord('q') or GlobalWord == "disconnect":
+                            break
+                    captchaer.release()
+                    cv2.destroyAllWindows()
+                    print("Camera Disconnected")
+
+                elif GlobalWord == "exit":
+                    ThreadInBackGround()
+                    print("...")
+                    sleep(1)
+                    print("...")
+                    sleep(1)
+                    print("...")
+                    sleep(1)
+                    print("Goodbye")
                     break
-            captchaer.release()
-            cv2.destroyAllWindows()
-            print("Camera Disconnected")
+                else:
+                    sleep(1)
+                    print("...")
 
-        if GlobalWord == "exit":
-            ThreadInBackGround()
-            print("...")
-            sleep(1)
-            print("...")
-            sleep(1)
-            print("...")
-            sleep(1)
-            print("Goodbye")
-            break
-
-
-
-
+        except speech_recognition.UnknownValueError():
+            recognizer = sr.Recognizer()
+            continue
 
 if __name__ == "__main__":
     main()
-
