@@ -7,6 +7,9 @@ import cv2
 
 GlobalWord=""
 Flag=True
+DELAY=1
+XVal=0
+YVal=0
 #what to do after each voice recognitions
 def callBack(recognizer, audio ):
     global GlobalWord
@@ -20,13 +23,53 @@ def ClearLines(NLines=1):
     LINE_CLEAR = '\x1b[2k'
     for idx in range(NLines):
         print(LINE_UP, end=LINE_CLEAR)
+def SendPosition(BlueToothSerial,xPosition,yPosition,Pen):
+    if xPosition=="ideal" and yPosition=="ideal":
+        pass
+    elif xPosition=="forward" and yPosition=="ideal":
+        global XVal
+        XVal+=10
+        x = f"G1 X{XVal} Y{0} F1000 \r \n"
+        BlueToothSerial.write(x.encode("utf-8"))
+    elif xPosition == "backward" and yPosition == "ideal":
+        global XVal
+        XVal -= 10
+        x = f"G1 X{XVal} Y{0} F1000 \r \n"
+        BlueToothSerial.write(x.encode("utf-8"))
+    elif xPosition == "ideal" and yPosition == "right":
+        global YVal
+        YVal += 10
+        x = f"G1 X{0} Y{YVal} F1000 \r \n"
+        BlueToothSerial.write(x.encode("utf-8"))
+    elif xPosition == "ideal" and yPosition == "lift":
+        global YVal
+        YVal -= 10
+        x = f"G1 X{0} Y{YVal} F1000 \r \n"
+        BlueToothSerial.write(x.encode("utf-8"))
+    sleep(DELAY)
 
-def GetDestination():
+
+def GetDestination(BlueToothSerial):
     angleMeter = AngleMeterAlpha()
     angleMeter.measure()
+    print("Gyroscope Connected")
     PinFlag = False
-    Pin="up"
-    
+    Pen="up"
+
+    print("Set CNC Homing Command")
+    x = "$X\r \n"
+    BlueToothSerial.write(x.encode("utf-8"))
+    sleep(DELAY)
+
+    x = "$H\r \n"
+    BlueToothSerial.write(x.encode("utf-8"))
+    sleep(DELAY*10)
+
+    x = "G92 X0 Y0 \r \n"
+    BlueToothSerial.write(x.encode("utf-8"))
+    sleep(DELAY)
+    print("Homing Finished")
+
     while True:
         global GlobalWord
         if GlobalWord == "disconnect":
@@ -34,40 +77,39 @@ def GetDestination():
 
         elif GlobalWord == "start" and not PinFlag:
             PinFlag = True
-            Pin="down"
+            Pen="down"
 
         elif GlobalWord == "stop" and PinFlag:
             PinFlag = False
-            Pin="up"
+            Pen="up"
 
         x=angleMeter.get_kalman_roll()
         y=angleMeter.get_kalman_pitch()
-        xPosition="idel"
-        yPosition = "idel"
+        xPosition="ideal"
+        yPosition = "ideal"
 
-        if x<20 or x>-20:
-            xPosition = "idel"
+        if x<20 and x>-20:
+            xPosition = "ideal"
         elif x<80 and x>20:
             xPosition = "forward"
         elif x>-60 and x<-30:
             xPosition = "backward"
 
-        if y<20 or y>-20:
-            yPosition = "idel"
+        if y<20 and y>-20:
+            yPosition = "ideal"
         elif y<80 and y>20:
             yPosition = "left"
         elif y>-60 and y<-30:
             yPosition = "right"
 
-        stringToPrint = f"X : {x}\t Y: {y}\t Pin Status : {Pin}"
-        stringToPrint2 = f"X Position : {xPosition}\t Y Position: {yPosition}\t Pin Status : {Pin}"
+        stringToPrint = f"X : {x}\t Y: {y}\t Pen Status : {Pen}"
+        stringToPrint2 = f"X Position : {xPosition}\t Y Position: {yPosition}\t Pen Status : {Pen}"
         print('-' * len(stringToPrint2))
         print(stringToPrint)
         print(stringToPrint2)
-        sleep(0.3)
-        ClearLines(3)
+        SendPosition(BlueToothSerial,xPosition,yPosition,Pen)
+        #ClearLines(3)
         # print(angleMeter.get_int_roll(), angleMeter.get_int_pitch())
-        sleep(1)
     angleMeter.StopMeasure()
 
 #Main program start here
@@ -75,7 +117,7 @@ def main():
     while True:
         try:
             # connincting bluetooth with hc05 module at comm port 7 with 115200 baudrate
-            # BlueToothSerial = serial.Serial("/dev/rfcomm7",115200)
+            BlueToothSerial = serial.Serial("/dev/rfcomm7",115200)
             print("BlueTooth Connected")
 
             recognizer = sr.Recognizer()
@@ -96,18 +138,9 @@ def main():
 
                 elif (GlobalWord == "mode 1" or GlobalWord == "mode one") and Flag:
                     Flag = False
-                    GetDestination()
+                    GetDestination(BlueToothSerial)
 
-                elif GlobalWord == "home" and Flag:
-                    Flag = False
-                    print("Set CNC Homing Command")
-                    x = "$X\r \n"
-                    # BlueToothSerial.write(x.encode("utf-8"))
-                    sleep(1)
 
-                    x = "$H\r \n"
-                    # BlueToothSerial.write(x.encode("utf-8"))
-                    sleep(1)
 
                 elif GlobalWord == "camera" and Flag:
                     Flag = False
