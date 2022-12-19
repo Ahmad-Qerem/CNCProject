@@ -24,25 +24,37 @@ def ClearLines(NLines=1):
     for idx in range(NLines):
         print(LINE_UP, end=LINE_CLEAR)
 def SendPosition(BlueToothSerial,xPosition,yPosition,Pen):
+    global XVal
+    global YVal
+    
+    if Pen=="start":
+        x = f"M3 S45 \r \n"
+        BlueToothSerial.write(x.encode("utf-8"))
+        sleep(DELAY)
+
+    elif Pen=="stop":
+        x = f"M5 \r \n"
+        BlueToothSerial.write(x.encode("utf-8"))
+        sleep(DELAY)
+
+    else:
+        pass
+    
     if xPosition=="ideal" and yPosition=="ideal":
         pass
     elif xPosition=="forward" and yPosition=="ideal":
-        global XVal
         XVal+=10
         x = f"G1 X{XVal} Y{0} F1000 \r \n"
         BlueToothSerial.write(x.encode("utf-8"))
     elif xPosition == "backward" and yPosition == "ideal":
-        global XVal
         XVal -= 10
         x = f"G1 X{XVal} Y{0} F1000 \r \n"
         BlueToothSerial.write(x.encode("utf-8"))
     elif xPosition == "ideal" and yPosition == "right":
-        global YVal
         YVal += 10
         x = f"G1 X{0} Y{YVal} F1000 \r \n"
         BlueToothSerial.write(x.encode("utf-8"))
-    elif xPosition == "ideal" and yPosition == "lift":
-        global YVal
+    elif xPosition == "ideal" and yPosition == "left":
         YVal -= 10
         x = f"G1 X{0} Y{YVal} F1000 \r \n"
         BlueToothSerial.write(x.encode("utf-8"))
@@ -63,7 +75,7 @@ def GetDestination(BlueToothSerial):
 
     x = "$H\r \n"
     BlueToothSerial.write(x.encode("utf-8"))
-    sleep(DELAY*10)
+    sleep(DELAY*5)
 
     x = "G92 X0 Y0 \r \n"
     BlueToothSerial.write(x.encode("utf-8"))
@@ -136,7 +148,7 @@ def main():
                     Flag = False
                     print(date.today())
 
-                elif (GlobalWord == "mode 1" or GlobalWord == "mode one") and Flag:
+                elif GlobalWord == "hello" and Flag:
                     Flag = False
                     GetDestination(BlueToothSerial)
 
@@ -171,7 +183,8 @@ def main():
                     print("...")
 
         except speech_recognition.UnknownValueError():
-            recognizer = sr.Recognizer()
+            #global recognizer
+            #recognizer = sr.Recognizer()
             continue
 
 if __name__ == "__main__":
