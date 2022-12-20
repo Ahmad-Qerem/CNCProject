@@ -79,7 +79,6 @@ class CncController:
         self.YVal += Y
         CommandToSend = f"G91 X{X} Y{Y} F200"
         self.SendCommandToCnc(CommandToSend)
-        pass
 
     def PositionToGRBLCommand(self, xPosition, yPosition, Pen):
         if Pen == "down" and not self.PenFlag:
