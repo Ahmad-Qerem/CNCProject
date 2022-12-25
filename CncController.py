@@ -1,9 +1,12 @@
+import sys
 import serial
 import speech_recognition as sr
 from datetime import date
-from UninterruptedAngleMeter.AngleMeterAlpha import AngleMeterAlpha as Gyroscope
 from time import sleep
 import cv2
+
+sys.path.append('/home/oth/AmrAhmedGradProject/CNCProject/UninterruptedAngleMeter')
+from AngleMeterAlpha import AngleMeterAlpha as Gyroscope
 
 
 class CncController:
@@ -11,7 +14,7 @@ class CncController:
         try:
             self.BlueToothSerial = serial.Serial("/dev/rfcomm7", 115200)
             # wake up cnc
-            self.BlueToothSerial.write("\r\n\r\n")
+            self.BlueToothSerial.write("\n".encode("utf-8"))
             sleep(2)
             # clear cnc message
             self.BlueToothSerial.flushInput()
