@@ -1,12 +1,12 @@
+from AngleMeterAlpha import AngleMeterAlpha as Gyroscope
 import sys
 import serial
 import speech_recognition as sr
 from datetime import date
 from time import sleep
 import cv2
-
-sys.path.append('/home/oth/AmrAhmedGradProject/CNCProject/UninterruptedAngleMeter')
-from AngleMeterAlpha import AngleMeterAlpha as Gyroscope
+sys.path.append(
+    '/home/oth/AmrAhmedGradProject/CNCProject/UninterruptedAngleMeter')
 
 
 class CncController:
@@ -14,10 +14,10 @@ class CncController:
         try:
             self.BlueToothSerial = serial.Serial("/dev/rfcomm0", 115200)
             # wake up cnc
-            #self.BlueToothSerial.write("\n".encode("utf-8"))
-            #sleep(2)
+            # self.BlueToothSerial.write("\n".encode("utf-8"))
+            # sleep(2)
             # clear cnc message
-            #self.BlueToothSerial.flushInput()
+            # self.BlueToothSerial.flushInput()
             print("BlueTooth Connected ")
         except Exception as e:
             print("Something Go Wrong In Bluetooth")
@@ -33,16 +33,23 @@ class CncController:
 
     def callBack(self, recognizer, audio):
         try:
-            self.GlobalWord = recognizer.recognize_google(audio, key=None, language='en-US')
+
+            word = recognizer.recognize_google(
+                audio, key=None, language='en-US')
+            self.GlobalWord = word
         #    self.GlobalWord = self.GlobalWord.lower()
             print(self.GlobalWord)
-            self.RecognizeToDo()
+            if (not self.GlobalFlag):
+                self.GlobalFlag = True
+                self.RecognizeToDo(word)
+
         except LookupError:
             print("Could not understand audio")
         except IndexError:
             print("no internet connection")
         except Exception as e:
-            pass
+            print("error in callback ")
+            print("Error"+str(e))
 
     def StartListen(self):
         self.ThreadListenInBackGround = self.recognizer.listen_in_background(
@@ -67,24 +74,30 @@ class CncController:
         print("Sending :"+Command)
         x = Command+'\r \n'
         self.BlueToothSerial.write(x.encode("utf-8"))
-        sleep(0.5)
         GRBLOut = self.BlueToothSerial.readline()
         print(GRBLOut.strip().decode("utf-8"))
+        sleep(0.2)
 
     def CncHome(self):
         print("CNC Homing")
         self.SendCommandToCnc("$X")
         self.SendCommandToCnc("$H")
         self.SendCommandToCnc("G92 X0 Y0")
-        self.XVal = 0
-        self.YVal = 0
+        self.XVal = 5
+        self.YVal = 5
         print("Homing Finished")
 
     def SendPositionToCnc(self, X=0, Y=0):
-        self.XVal += X
-        self.YVal += Y
-        CommandToSend = f"G91 X{X} Y{Y} F200"
-        self.SendCommandToCnc(CommandToSend)
+
+        if (self.XVal+X) < 10 or (self.XVal+X) > 300:
+            print("Out Of Range X")
+        elif (self.YVal+Y) < 10 or (self.YVal+Y) > 180:
+            print("Out Of Range Y")
+        else:
+            self.XVal += X
+            self.YVal += Y
+            CommandToSend = f"G91 X{X} Y{Y} F200"
+            self.SendCommandToCnc(CommandToSend)
 
     def PositionToGRBLCommand(self, xPosition, yPosition, Pen):
         if Pen == "down" and not self.PenFlag:
@@ -102,15 +115,15 @@ class CncController:
             self.SendPositionToCnc(-10, 0)
         elif xPosition == "ideal" and yPosition == "right":
             self.SendPositionToCnc(0, 10)
-        elif xPosition == "ideal" and yPosition == "lift":
+        elif xPosition == "ideal" and yPosition == "left":
             self.SendPositionToCnc(0, -10)
         elif xPosition == "forward" and yPosition == "right":
             self.SendPositionToCnc(10, 10)
-        elif xPosition == "backward" and yPosition == "lift":
+        elif xPosition == "backward" and yPosition == "left":
             self.SendPositionToCnc(-10, -10)
         elif xPosition == "backward" and yPosition == "right":
             self.SendPositionToCnc(-10, 10)
-        elif xPosition == "forward" and yPosition == "lift":
+        elif xPosition == "forward" and yPosition == "left":
             self.SendPositionToCnc(10, -10)
 
     def GyroscopeToCncMode(self):
@@ -163,32 +176,30 @@ class CncController:
         angleMeter.StopMeasure()
         print("Gyroscope Disconnected")
 
-    def RecognizeToDo(self):
-        if self.GlobalWord == "today":
+    def RecognizeToDo(self, word):
+        if word == "today":
             print(date.today())
-
-        elif (self.GlobalWord == "mode 1" or self.GlobalWord == "mode one" or self.GlobalWord == "mod one" or self.GlobalWord == "mod 1" or self.GlobalWord == "mod1" or self.GlobalWord == "mud1" or self.GlobalWord == "mud 1" or self.GlobalWord == "hello"):
+            self.GlobalFlag = False
+        elif (word in self.Mode1):
             self.GyroscopeToCncMode()
+            self.GlobalFlag = False
 
-        elif self.GlobalWord == "camera":
+        elif word == "camera":
             self.ConnectToCamera()
+            self.GlobalFlag = False
 
-        elif self.GlobalWord == "exit":
+        elif word == "exit":
             self.ThreadListenInBackGround()
-            print("...")
-            sleep(1)
-            print("...")
-            sleep(1)
-            print("...")
-            sleep(1)
-            print("Goodbye")
             exit(0)
         else:
-            print("SomeThing ...")
+            print("Something ...")
 
     def __init__(self):
+        self.Mode1 = ["mode 1", "mode one", "mod one",
+                      "mod 1", "mod1", "mud1", "mud 1", "hello"]
         self.GlobalWord = ""
         self.PenFlag = False
+        self.GlobalFlag = False
         self.DELAY = 1
         self.XVal = 0
         self.YVal = 0
