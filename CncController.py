@@ -67,8 +67,9 @@ class CncController:
         print("Sending :"+Command)
         x = Command+'\r \n'
         self.BlueToothSerial.write(x.encode("utf-8"))
+        sleep(0.5)
         GRBLOut = self.BlueToothSerial.readline()
-        print("GRBL :"+GRBLOut.strip())
+        print(GRBLOut.strip().decode("utf-8"))
 
     def CncHome(self):
         print("CNC Homing")

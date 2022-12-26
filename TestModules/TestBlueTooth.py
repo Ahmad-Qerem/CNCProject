@@ -17,7 +17,8 @@ try :
         x =input()
         x=x+'\r \n'
         BlueToothSerial.write(x.encode("utf-8"))
-        time.sleep(1)
+        GRBLOut = BlueToothSerial.readline()
+        print(GRBLOut.strip().decode("utf-8"))
 
 except KeyboardInterrupt:
     print("Quit")
