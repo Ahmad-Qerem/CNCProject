@@ -1,4 +1,4 @@
-from AngleMeterAlpha import AngleMeterAlpha as Gyroscope
+
 import sys
 import serial
 import speech_recognition as sr
@@ -7,6 +7,7 @@ from time import sleep
 import cv2
 sys.path.append(
     '/home/oth/AmrAhmedGradProject/CNCProject/UninterruptedAngleMeter')
+from AngleMeterAlpha import AngleMeterAlpha as Gyroscope
 
 
 class CncController:
@@ -73,10 +74,12 @@ class CncController:
     def SendCommandToCnc(self, Command):
         print("Sending :"+Command)
         x = Command+'\r \n'
+        sleep(0.2)
         self.BlueToothSerial.write(x.encode("utf-8"))
         GRBLOut = self.BlueToothSerial.readline()
         print(GRBLOut.strip().decode("utf-8"))
-        sleep(0.2)
+        print("command sent")
+        
 
     def CncHome(self):
         print("CNC Homing")
@@ -94,23 +97,28 @@ class CncController:
         elif (self.YVal+Y) < 10 or (self.YVal+Y) > 180:
             print("Out Of Range Y")
         else:
+            print('bla bla bla bla bla bla bla')
             self.XVal += X
             self.YVal += Y
             CommandToSend = f"G91 X{X} Y{Y} F200"
             self.SendCommandToCnc(CommandToSend)
 
     def PositionToGRBLCommand(self, xPosition, yPosition, Pen):
+        print("this is pos")
         if Pen == "down" and not self.PenFlag:
             self.SendCommandToCnc("M3 S45")
             self.PenFlag = True
         elif Pen == "up" and self.PenFlag:
             self.SendCommandToCnc("M5")
             self.PenFlag = False
-
+        
+        print("this is posssss")
         if xPosition == "ideal" and yPosition == "ideal":
             pass
+            print("this is ideal")
         elif xPosition == "forward" and yPosition == "ideal":
             self.SendPositionToCnc(10, 0)
+            print("this is forward")
         elif xPosition == "backward" and yPosition == "ideal":
             self.SendPositionToCnc(-10, 0)
         elif xPosition == "ideal" and yPosition == "right":
