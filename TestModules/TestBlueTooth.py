@@ -10,7 +10,7 @@
 
 import serial
 import time
-BlueToothSerial = serial.Serial("/dev/rfcomm7",115200)
+BlueToothSerial = serial.Serial("/dev/rfcomm0",115200)
 print("BlueTooth Connected")
 try :
     while 1:

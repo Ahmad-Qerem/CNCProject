@@ -12,12 +12,12 @@ from AngleMeterAlpha import AngleMeterAlpha as Gyroscope
 class CncController:
     def ConnectBlueTooth(self):
         try:
-            self.BlueToothSerial = serial.Serial("/dev/rfcomm7", 115200)
+            self.BlueToothSerial = serial.Serial("/dev/rfcomm0", 115200)
             # wake up cnc
-            self.BlueToothSerial.write("\n".encode("utf-8"))
-            sleep(2)
+            #self.BlueToothSerial.write("\n".encode("utf-8"))
+            #sleep(2)
             # clear cnc message
-            self.BlueToothSerial.flushInput()
+            #self.BlueToothSerial.flushInput()
             print("BlueTooth Connected ")
         except Exception as e:
             print("Something Go Wrong In Bluetooth")
@@ -33,14 +33,16 @@ class CncController:
 
     def callBack(self, recognizer, audio):
         try:
-            self.GlobalWord = recognizer.recognize_google(audio)
-            self.GlobalWord = self.GlobalWord.lower()
+            self.GlobalWord = recognizer.recognize_google(audio, key=None, language='en-US')
+        #    self.GlobalWord = self.GlobalWord.lower()
             print(self.GlobalWord)
             self.RecognizeToDo()
         except LookupError:
             print("Could not understand audio")
         except IndexError:
             print("no internet connection")
+        except Exception as e:
+            pass
 
     def StartListen(self):
         self.ThreadListenInBackGround = self.recognizer.listen_in_background(
@@ -63,9 +65,9 @@ class CncController:
 
     def SendCommandToCnc(self, Command):
         print("Sending :"+Command)
-        x = Command+"\n"
+        x = Command+'\r \n'
         self.BlueToothSerial.write(x.encode("utf-8"))
-        GRBLOut = self.BlueToothSerial.readLine()
+        GRBLOut = self.BlueToothSerial.readline()
         print("GRBL :"+GRBLOut.strip())
 
     def CncHome(self):
@@ -164,7 +166,7 @@ class CncController:
         if self.GlobalWord == "today":
             print(date.today())
 
-        elif (self.GlobalWord == "mode 1" or self.GlobalWord == "mode one"):
+        elif (self.GlobalWord == "mode 1" or self.GlobalWord == "mode one" or self.GlobalWord == "mod one" or self.GlobalWord == "mod 1" or self.GlobalWord == "mod1" or self.GlobalWord == "mud1" or self.GlobalWord == "mud 1" or self.GlobalWord == "hello"):
             self.GyroscopeToCncMode()
 
         elif self.GlobalWord == "camera":
