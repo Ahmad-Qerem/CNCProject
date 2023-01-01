@@ -1,20 +1,16 @@
 """Game of tic tac toe using OpenCV to play against computer"""
 
-
-from utils import detections
-from utils import imutils
 import os
 import sys
 import cv2
 import argparse
 import numpy as np
-
 from keras.models import load_model
+
+sys.path.append('TicTacToe')
 from alphabeta import Tic, get_enemy, determine
-sys.path.append(
-    '/home/oth/AmrAhmedGradProject/CNCProject/TicTacToe')
-
-
+from utils import detections
+from utils import imutils
 def parse_arguments(argv):
     parser = argparse.ArgumentParser()
 

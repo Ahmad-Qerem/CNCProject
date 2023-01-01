@@ -77,15 +77,14 @@ class CncController:
         self.BlueToothSerial.write(x.encode("utf-8"))
         GRBLOut = self.BlueToothSerial.readline()
         print(GRBLOut.strip().decode("utf-8"))
-        print("command sent")
 
     def CncHome(self):
         print("CNC Homing")
         self.SendCommandToCnc("$X")
         self.SendCommandToCnc("$H")
         self.SendCommandToCnc("G92 X0 Y0")
-        self.XVal = 5
-        self.YVal = 5
+        self.XVal = 0
+        self.YVal = 0
         print("Homing Finished")
 
     def SendPositionToCnc(self, X=0, Y=0):
@@ -109,7 +108,6 @@ class CncController:
             self.SendCommandToCnc("M5")
             self.PenFlag = False
 
-        print("this is posssss")
         if xPosition == "ideal" and yPosition == "ideal":
             pass
             print("this is ideal")
