@@ -1,5 +1,6 @@
 # from CncController import CncController
 from time import sleep
+import cv2
 from TicTacToe import play
 
 # Main program start here
@@ -13,7 +14,7 @@ def main():
     # play.RunGame("http://192.168.1.6:8080/video")
     while(True):
         try :
-            play.RunGame("http://192.168.1.9:8080/video")
+            play.RunGame("http://192.168.1.2:8080/video")
             #play.RunGame(0)
         except Exception as e :
             print("Error : "+ str(e))
