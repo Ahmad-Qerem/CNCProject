@@ -6,14 +6,14 @@ from datetime import date
 from time import sleep
 import cv2
 sys.path.append(
-    '/home/oth/AmrAhmedGradProject/CNCProject/UninterruptedAngleMeter')
+    '/home/aa/graduation project/CNCProject/UninterruptedAngleMeter')
 from AngleMeterAlpha import AngleMeterAlpha as Gyroscope
 
 
 class CncController:
     def ConnectBlueTooth(self):
         try:
-            self.BlueToothSerial = serial.Serial("/dev/rfcomm0", 115200)
+            self.BlueToothSerial = serial.Serial("/dev/rfcomm7", 115200)
             # wake up cnc
             # self.BlueToothSerial.write("\n".encode("utf-8"))
             # sleep(2)
@@ -92,16 +92,16 @@ class CncController:
 
     def SendPositionToCnc(self, X=0, Y=0):
 
-        if (self.XVal+X) < 10 or (self.XVal+X) > 300:
-            print("Out Of Range X")
-        elif (self.YVal+Y) < 10 or (self.YVal+Y) > 180:
-            print("Out Of Range Y")
-        else:
-            print('bla bla bla bla bla bla bla')
-            self.XVal += X
-            self.YVal += Y
-            CommandToSend = f"G91 X{X} Y{Y} F200"
-            self.SendCommandToCnc(CommandToSend)
+        # if (self.XVal+X) < 10 or (self.XVal+X) > 300:
+        #     print("Out Of Range X")
+        # elif (self.YVal+Y) < 10 or (self.YVal+Y) > 180:
+        #     print("Out Of Range Y")
+        # else:
+        print('bla bla bla bla bla bla bla')
+        self.XVal += X
+        self.YVal += Y
+        CommandToSend = f"G91 X{X} Y{Y} F200"
+        self.SendCommandToCnc(CommandToSend)
 
     def PositionToGRBLCommand(self, xPosition, yPosition, Pen):
         print("this is pos")
