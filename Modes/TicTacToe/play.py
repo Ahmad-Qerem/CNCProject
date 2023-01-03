@@ -11,15 +11,6 @@ sys.path.append('TicTacToe')
 from alphabeta import Tic, get_enemy, determine
 from utils import detections
 from utils import imutils
-def parse_arguments(argv):
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument('cam', type=int,
-                        help='USB camera for video streaming')
-    parser.add_argument('--model', '-m', type=str, default='data/model.h5',
-                        help='model file (.h5) to detect Xs and Os')
-
-    return parser.parse_args()
 
 
 def find_sheet_paper(frame, thresh, add_margin=True):
@@ -121,7 +112,6 @@ def play(vcap):
             point = (int(c[0]), int(c[1]))
             cv2.circle(img=frame, center=point, radius=2,
                        color=(0, 0, 255), thickness=2)
-        print("-------------")
         # Now working with 'paper' to find grid
         paper_gray = cv2.cvtColor(paper, cv2.COLOR_BGR2GRAY)
         _, paper_thresh = cv2.threshold(
@@ -157,6 +147,9 @@ def play(vcap):
             if shape is not None:
                 history[i] = {'shape': shape, 'bbox': (x, y, w, h)}
                 board.make_move(i, player)
+            else:
+                ######################## drow nums 
+                pass    
             paper = draw_shape(paper, shape, (x, y, w, h))
 
         # Check whether game has finished
@@ -200,6 +193,5 @@ def RunGame(path):
     assert os.path.exists("TicTacToe/data/model.h5"), '{} does not exist'
     model = load_model("TicTacToe/data/model.h5")
     vcap = cv2.VideoCapture(path)
-    # vcap = cv2.VideoCapture(args.cam)
     winner = play(vcap)
     print('Winner is:', winner)

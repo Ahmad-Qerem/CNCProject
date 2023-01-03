@@ -1,3 +1,9 @@
 {
-  "cSpell.words": ["GRBL"]
+  "cSpell.words": [
+    "GRBL"
+  ],
+  "python.analysis.extraPaths": [
+    "./Utils/AngleMeter",
+    "./Utils"
+  ]
 }
