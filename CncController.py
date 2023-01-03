@@ -92,17 +92,17 @@ class CncController:
 
     def SendPositionToCnc(self, X=0, Y=0):
 
-        if (self.XVal+X) < 10 or (self.XVal+X) > 300:
+        if (self.XVal+X) < 10 or (self.XVal+X) > 600:
             print("Out Of Range X")
-            if (self.YVal+Y) < 10 or (self.YVal+Y) > 180:
+            if (self.YVal+Y) < 10 or (self.YVal+Y) > 360:
                 print("Out Of Range Y")
             else:
                 self.YVal += Y
                 CommandToSend = f"G91 X{0} Y{Y} F200"
                 self.SendCommandToCnc(CommandToSend)
-        elif (self.YVal+Y) < 10 or (self.YVal+Y) > 180:
+        elif (self.YVal+Y) < 10 or (self.YVal+Y) > 360:
             print("Out Of Range Y")
-            if (self.XVal+X) < 10 or (self.XVal+X) > 300:
+            if (self.XVal+X) < 10 or (self.XVal+X) > 600:
                print("Out Of Range X")
             else:
                 self.XVal += X
