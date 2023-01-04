@@ -1,4 +1,5 @@
 
+import os
 from time import sleep
 import serial
 
@@ -62,6 +63,23 @@ class Bluetooth:
         self.XVal = 0
         self.YVal = 0
         print("Homing Finished")
+
+    def DrawBoard(self):
+        self.SendGCode('board.g')
+        
+
+    def SendGCode(self, filename):
+        with open(filename) as f:
+            while (True):
+                line = f.readline().strip('\n')
+                if not line:
+                    break
+
+                if line[0] == ';':
+                    # Comments start with semicolon
+                    continue
+
+                self.SendCommandToCnc(line)
 
     def PenRaise(self):
         if self.Pen:
