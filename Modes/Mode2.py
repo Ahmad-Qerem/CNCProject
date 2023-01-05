@@ -3,9 +3,10 @@ import numpy as np
 import cv2
 import os
 import sys
-sys.path.append('TicTacToe')
-from utils import imutils
-from utils import detections
+sys.path.append('/home/aa/graduation project/CNCProject/Modes/TicTacToe/utils')
+import imutils
+import detections
+sys.path.append('/home/aa/graduation project/CNCProject/Modes/TicTacToe')
 from alphabeta import Tic, get_enemy, determine
 
 sys.path.append('../Utils')

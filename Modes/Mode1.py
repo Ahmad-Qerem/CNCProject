@@ -1,7 +1,7 @@
 
 import sys
-sys.path.append('../Utils')
-from AngleMeter.AngleMeter import AngleMeter
+sys.path.append('/home/aa/graduation project/CNCProject/Utils')
+from AngleMeterO.AngleMeterO import AngleMeter
 from Recognizer import Recognizer
 class Mode1:
     def __init__(self, BluetoothSerial):
@@ -17,7 +17,8 @@ class Mode1:
 
         try:
             word = recognizer.recognize_google(audio, key=None, language='en-US')
-            if word == "start":
+            print(word)
+            if word == "hello":
                 self.BS.PenDown()
             elif word == "stop" :
                 self.BS.PenRaise()
@@ -40,7 +41,7 @@ class Mode1:
     def PositionToGRBLCommand(self, xPosition, yPosition):
         if xPosition == "ideal" and yPosition == "ideal":
             pass
-            print("this is ideal")
+            #print("this is ideal")
         elif xPosition == "forward" and yPosition == "ideal":
             self.BS.SendPositionToCnc(10, 0)
             print("this is forward")
@@ -87,9 +88,9 @@ class Mode1:
                 yPosition = "right"
             stringToPrint = f"X : {x}\t Y: {y}"
             stringToPrint2 = f"X Position : {xPosition}\t Y Position: {yPosition}"
-            print('-' * len(stringToPrint2))
-            print(stringToPrint)
-            print(stringToPrint2)
+            #print('-' * len(stringToPrint2))
+            #print(stringToPrint)
+            #print(stringToPrint2)
             self.PositionToGRBLCommand(xPosition, yPosition)
         angleMeter.StopMeasure()
         print("Gyroscope Disconnected")

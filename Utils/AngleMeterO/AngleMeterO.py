@@ -5,7 +5,8 @@
 #SCL - SCL (5 - Board)
 #SDA - SDA (3 - Board)
 
-
+import sys
+sys.path.append('/home/aa/graduation project/CNCProject/Utils/AngleMeterO')
 from Kalman import KalmanAngle
 import smbus as smbus2#import SMBus module of I2C
 import time
