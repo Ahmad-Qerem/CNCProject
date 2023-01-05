@@ -7,7 +7,7 @@ class Bluetooth:
     def __init__(self):
         self.XVal = 0
         self.YVal = 0
-        self.Pen=False
+        self.Pen=True
         self.BlueToothSerial=None
         self.ConnectBlueTooth()
         print("New Bluetooth Object Has been created ")
@@ -86,8 +86,8 @@ class Bluetooth:
 
     def PenRaise(self):
         if self.Pen:
-            self.Pen=True
-            self.SendCommandToCnc("M3 S45")
+            self.Pen=False
+            self.SendCommandToCnc("M3S90")
 
     def PenDown(self):
         if not self.Pen:

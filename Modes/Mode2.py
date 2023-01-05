@@ -17,11 +17,13 @@ import Recognizer
 
 class Mode2:
     def __init__(self, BluetoothSerial):
+        print("im here 1")
         self.BS = BluetoothSerial
         self.recognizer = Recognizer()
         self.Word=""
         self.FlagEndGame=False
         self.FlagTurn=False
+        print("im here 2")
         self.RunGame('http://192.168.1.9/video')
         print("New Mode2 Object Has been created ")
 
