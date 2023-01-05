@@ -60,6 +60,7 @@ class Bluetooth:
     def CncHome(self):
         print("CNC Homing")
         self.SendCommandToCnc("$X")
+        self.PenRaise()
         self.SendCommandToCnc("$H")
         self.SendCommandToCnc("G92 X0 Y0")
         self.XVal = 0
@@ -86,11 +87,11 @@ class Bluetooth:
     def PenRaise(self):
         if self.Pen:
             self.Pen=True
-            self.SendCommandToCnc("M5")
+            self.SendCommandToCnc("M3 S45")
 
     def PenDown(self):
         if not self.Pen:
-            self.SendCommandToCnc("M3 S45")
+            self.SendCommandToCnc("M5")
 
     def Disconnect(self):
         self.PenRaise()
