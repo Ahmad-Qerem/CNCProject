@@ -1,8 +1,7 @@
-from datetime import date
-from Utils import Recognizer
-from Utils import Bluetooth
-from Modes import Mode1
-from Modes import Mode2
+from Utils.Recognizer import Recognizer
+from Utils.SerialBluetooth import Bluetooth
+from Modes.Mode1 import Mode1
+from Modes.Mode2 import Mode2
 
 class CncController:
     
@@ -14,8 +13,10 @@ class CncController:
         self.BluetoothSerial = Bluetooth()
         self.recognizer = Recognizer()
         self.recognizer.StartListen(self.callBack)
+        print("New CncController Object Has been created ")
         
     def callBack(self, recognizer, audio):
+        print("callBack CncController")
         try:
             word = recognizer.recognize_google(audio, key=None, language='en-US')
             print(word)

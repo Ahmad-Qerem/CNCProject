@@ -8,6 +8,8 @@ class Recognizer:
         self.mic = None
         self.ThreadListenInBackGround = None
         self.ConnectRecognizer()
+        print("New Recognizer Object Has been created ")
+
 
     def ConnectRecognizer(self):
         self.recognizer = sr.Recognizer()

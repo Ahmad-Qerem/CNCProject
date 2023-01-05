@@ -10,6 +10,8 @@ class Bluetooth:
         self.Pen=False
         self.BlueToothSerial=None
         self.ConnectBlueTooth()
+        print("New Bluetooth Object Has been created ")
+
 
     def ConnectBlueTooth(self):
         try:

@@ -13,7 +13,7 @@ import math
 import threading
 
 
-class AngleMeterAlpha:
+class AngleMeter:
 #Read the gyro and acceleromater values from MPU6050
     def MPU_Init(self):
 
@@ -195,6 +195,8 @@ class AngleMeterAlpha:
         self.compl_roll = 0
         self.kalman_pitch = 0
         self.kalman_roll = 0
+        print("New Gyro Object Has been created ")
+
 
     def measure(self):
         self.angleThread.start()

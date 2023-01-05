@@ -1,16 +1,20 @@
+
 import sys
 sys.path.append('../Utils')
-from AngleMeter import AngleMeter
-import Recognizer
-
+from AngleMeter.AngleMeter import AngleMeter
+from Recognizer import Recognizer
 class Mode1:
     def __init__(self, BluetoothSerial):
         self.BS = BluetoothSerial
         self.recognizer = Recognizer()
         self.Flag = False
         self.GyroscopeToCnc()
+        print("New Mode1 Object Has been created ")
+
         
     def callBack(self, recognizer, audio):
+        print("callBack Mode1")
+
         try:
             word = recognizer.recognize_google(audio, key=None, language='en-US')
             if word == "start":

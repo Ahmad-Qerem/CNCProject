@@ -22,8 +22,11 @@ class Mode2:
         self.FlagEndGame=False
         self.FlagTurn=False
         self.RunGame('http://192.168.1.9/video')
+        print("New Mode2 Object Has been created ")
+
 
     def callBack(self, recognizer, audio):
+        print("callBack Mode2")
         try:
             self.word = recognizer.recognize_google(audio, key=None, language='en-US')
             if self.word == "start":
