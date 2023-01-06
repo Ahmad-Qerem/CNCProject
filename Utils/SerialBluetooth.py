@@ -68,7 +68,7 @@ class Bluetooth:
         print("Homing Finished")
 
     def DrawBoard(self):
-        self.SendGCode('board.g')
+        self.SendGCode('/home/aa/graduation project/CNCProject/Utils/board.g')
         
 
     def SendGCode(self, filename):

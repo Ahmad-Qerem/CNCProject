@@ -9,20 +9,24 @@ import detections
 sys.path.append('/home/aa/graduation project/CNCProject/Modes/TicTacToe')
 from alphabeta import Tic, get_enemy, determine
 
-sys.path.append('../Utils')
-import Recognizer
+sys.path.append('/home/aa/graduation project/CNCProject/Utils')
+from Recognizer import Recognizer
 
 
 
 
 class Mode2:
     def __init__(self, BluetoothSerial):
+        print('this is mode 2')
         self.BS = BluetoothSerial
+        print('after bluetooth')
         self.recognizer = Recognizer()
+        print('after reco')
         self.Word=""
         self.FlagEndGame=False
         self.FlagTurn=False
-        self.RunGame('http://192.168.1.9/video')
+        print('this is Run Game')
+        self.RunGame('http://192.168.1.2:8080/video')
         print("New Mode2 Object Has been created ")
 
 
@@ -50,7 +54,7 @@ class Mode2:
         except IndexError:
             print("no internet connection")
         except Exception as e:
-            print("error in callback ")
+            print("error in callback mode 2")
             print("Error"+str(e))
 
 
@@ -129,7 +133,10 @@ class Mode2:
         history = {}
         message = True
         # Draw Board
+        self.BS.CncHome()
         self.BS.DrawBoard()
+        self.recognizer.StartListen(self.callBack)
+
         # Start playing
         while True:
             ret, frame = vcap.read()
@@ -232,10 +239,11 @@ class Mode2:
 
 
     def RunGame(self,path):
+        print('I am Run game')
         global model
-        assert os.path.exists("TicTacToe/data/model.h5"), '{} does not exist'
-        model = load_model("TicTacToe/data/model.h5")
+        assert os.path.exists("/home/aa/graduation project/CNCProject/Modes/TicTacToe/data/model.h5"), '{} does not exist'
+        model = load_model("/home/aa/graduation project/CNCProject/Modes/TicTacToe/data/model.h5")
         vcap = cv2.VideoCapture(path)
-        self.recognizer.StartListen(self.callBack)
+        print('this is Play')
         winner = self.play(vcap)
         print('Winner is:', winner)
