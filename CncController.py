@@ -21,7 +21,12 @@ class CncController:
             word = recognizer.recognize_google(audio, key=None, language='en-US')
             print(word)
             if (word in self.Mode1STR):
+                print("before mode 1 ")
                 GyroMode = Mode1(self.BluetoothSerial)
+                GyroMode.GyroscopeToCnc()
+                print("after mode 1 ")
+                #del GyroMode
+                #self.recognizer.StartListen(self.callBack)
             elif (word in self.Mode2STR):
                 XOMode = Mode2(self.BluetoothSerial)
             elif word == "exit":
@@ -31,6 +36,7 @@ class CncController:
             else:
                 print("Something ...")
 
+            print("finish ")
         except LookupError:
             print("Could not understand audio")
         except IndexError:

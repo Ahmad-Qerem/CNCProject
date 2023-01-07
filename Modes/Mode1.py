@@ -13,7 +13,7 @@ class Mode1:
         self.BS = BluetoothSerial
         self.recognizer = Recognizer()
         self.Flag = False
-        self.GyroscopeToCnc()
+        #self.GyroscopeToCnc()
         print("New Mode1 Object Has been created ")
 
         
