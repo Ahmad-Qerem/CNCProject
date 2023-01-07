@@ -10,20 +10,19 @@ sys.path.append('/home/aa/graduation project/CNCProject/Modes/TicTacToe')
 from alphabeta import Tic, get_enemy, determine
 
 sys.path.append('../Utils')
-import Recognizer
+from Recognizer import Recognizer
 
 
 
 
 class Mode2:
+
     def __init__(self, BluetoothSerial):
-        print("im here 1")
         self.BS = BluetoothSerial
         self.recognizer = Recognizer()
         self.Word=""
         self.FlagEndGame=False
         self.FlagTurn=False
-        print("im here 2")
         self.RunGame('http://192.168.1.9/video')
         print("New Mode2 Object Has been created ")
 
@@ -109,11 +108,12 @@ class Mode2:
                 bottom_left, bottom_center, bottom_right]
 
 
-    def draw_shape(template, shape, coords):
+    def draw_shape(self,template, shape, coords):
         """Draw on a cell the shape which resides in it"""
         x, y, w, h = coords
         if shape == 'O':
             centroid = (x + int(w / 2), y + int(h / 2))
+            self.BS.DrawCircle(x,y)
             cv2.circle(template, centroid, 10, (0, 0, 0), 2)
         elif shape == 'X':
             # Draws the 'X' shape
@@ -121,6 +121,7 @@ class Mode2:
                     (0, 0, 0), 2)
             cv2.line(template, (x + 10, y + h - 7), (x + w - 10, y + 7),
                     (0, 0, 0), 2)
+            self.BS.DrawX(x, y)
         return template
 
 

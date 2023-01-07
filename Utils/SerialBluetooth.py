@@ -69,20 +69,37 @@ class Bluetooth:
 
     def DrawBoard(self):
         self.SendGCode('board.g')
-        
+
+    def AbsoluteMove(self,X,Y):
+        command=f"G1X{X}Y{Y}"
+        self.SendCommandToCnc(command)
+
+    def DrawCircle(self,X,Y):
+        self.PenRaise()
+        self.AbsoluteMove(X, Y)
+        self.PenDown()
+        self.SendGCode('C.gcode')
+
+
+    def DrawX(self, X, Y):
+        self.PenRaise()
+        self.AbsoluteMove(X, Y)
+        self.PenDown()
+        self.SendGCode('draw_x.g')
+
 
     def SendGCode(self, filename):
-        with open(filename) as f:
-            while (True):
-                line = f.readline().strip('\n')
-                if not line:
-                    break
+            with open(filename) as f:
+                while (True):
+                    line = f.readline().strip('\n')
+                    if not line:
+                        break
 
-                if line[0] == ';':
-                    # Comments start with semicolon
-                    continue
+                    if line[0] == ';':
+                        # Comments start with semicolon
+                        continue
 
-                self.SendCommandToCnc(line)
+                    self.SendCommandToCnc(line)
 
     def PenRaise(self):
         if self.Pen:
