@@ -68,9 +68,11 @@ class Bluetooth:
         print("Homing Finished")
 
     def DrawBoard(self):
-        self.SendGCode('board.g')
+        self.SendGCode('/home/aa/graduation project/CNCProject/Utils/board.g')
 
     def AbsoluteMove(self,X,Y):
+        self.XVal=X
+        self.YVal=Y
         command=f"G1X{X}Y{Y}"
         self.SendCommandToCnc(command)
 

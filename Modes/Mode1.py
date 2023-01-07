@@ -4,7 +4,12 @@ sys.path.append('/home/aa/graduation project/CNCProject/Utils')
 from AngleMeterO.AngleMeterO import AngleMeter
 from Recognizer import Recognizer
 class Mode1:
+    
     def __init__(self, BluetoothSerial):
+        self.disconnect = ['disconnect']
+        self.start = ['start','hello']
+        self.stop = ['stop']
+        self.home = ['home']
         self.BS = BluetoothSerial
         self.recognizer = Recognizer()
         self.Flag = False
@@ -18,14 +23,14 @@ class Mode1:
         try:
             word = recognizer.recognize_google(audio, key=None, language='en-US')
             print(word)
-            if word == "hello":
+            if word in self.start:
                 self.BS.PenDown()
-            elif word == "stop" :
+            elif word in self.stop :
                 self.BS.PenRaise()
-            elif word == "home" :
+            elif word in self.home :
                 self.BS.PenRaise()  
                 self.BS.CncHome()
-            elif word == "disconnect":
+            elif word in self.disconnect:
                 self.Flag = True
                 self.recognizer.StopListen()
             else:
