@@ -32,6 +32,7 @@ class CncController:
                 self.recognizer.StartListen(self.callBack)
             elif (word in self.Mode2STR):
                 XOMode = Mode2(self.BluetoothSerial)
+                XOMode.RunGame('http://192.168.1.2:8080/video')
             elif word == "exit":
                 self.recognizer.StopListen()
                 self.BluetoothSerial.Disconnect()

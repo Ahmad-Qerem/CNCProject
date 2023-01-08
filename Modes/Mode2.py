@@ -23,7 +23,7 @@ class Mode2:
         self.Word=""
         self.FlagEndGame=False
         self.FlagTurn=False
-        self.RunGame('http://192.168.1.2:8080/video')
+        #self.RunGame('http://192.168.1.2:8080/video')
         print("New Mode2 Object Has been created ")
 
     def callBack(self, recognizer, audio):
@@ -131,13 +131,15 @@ class Mode2:
         history = {}
         message = True
         # Draw Board
-        self.BS.CncHome()
-        self.BS.DrawBoard()
-        self.recognizer.StartListen(self.callBack)
+        #self.BS.CncHome()
+        #self.BS.DrawBoard()
+        #self.recognizer.StartListen(self.callBack)
 
         # Start playing
         while True:
+            print("1")
             ret, frame = vcap.read()
+            print("2")
             key = cv2.waitKey(1) & 0xFF
             if not ret:
                 print('[INFO] finished video processing')
@@ -148,6 +150,7 @@ class Mode2:
                 print('[INFO] stopped video processing')
                 break
 
+            print("3")
             # Preprocess input
             # frame = imutils.resize(frame, 500)
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -156,6 +159,7 @@ class Mode2:
             paper, corners = self.find_sheet_paper(frame, thresh)
             # Four red dots must appear on each corner of the sheet of paper,
             # otherwise try moving it until they're well detected
+            print("4")
             for c in corners:
                 point = (int(c[0]), int(c[1]))
                 cv2.circle(img=frame, center=point, radius=2,
@@ -167,6 +171,7 @@ class Mode2:
             grid = self.get_board_template(paper_thresh)
 
             # Draw grid and wait until user makes a move
+            print("5")
             for i, (x, y, w, h) in enumerate(grid):
                 cv2.rectangle(paper, (x, y), (x + w, y + h), (0, 0, 0), 2)
                 if history.get(i) is not None:
