@@ -7,7 +7,10 @@ class CncController:
     
     def __init__(self):
         self.Mode1STR = ["mode 1", "mode one", "mod one",
-                      "mod 1", "mod1", "mud1", "mud 1", "hello"]
+                      "mod 1", "mod1", "mud1", "mud 1",
+                      "Baldwin" ,"mullet one","Northland","Multan",
+                      "1","one","Note 1","Note one","smart one",
+                      "smart 1","smart1","hello"]
         self.Mode2STR = ["mode 2", "mode two", "mod two",
                       "mod 2", "mod2", "mud2", "mud 2", "hi"]
         self.BluetoothSerial = Bluetooth()
@@ -25,8 +28,8 @@ class CncController:
                 GyroMode = Mode1(self.BluetoothSerial)
                 GyroMode.GyroscopeToCnc()
                 print("after mode 1 ")
-                #del GyroMode
-                #self.recognizer.StartListen(self.callBack)
+                del GyroMode
+                self.recognizer.StartListen(self.callBack)
             elif (word in self.Mode2STR):
                 XOMode = Mode2(self.BluetoothSerial)
             elif word == "exit":
