@@ -146,7 +146,8 @@ class Mode2:
                 break
 
             # Stop
-            if key == ord('q') or self.FlagEndGame:
+            #if key == ord('q') or self.FlagEndGame:
+            if key == ord('q'):
                 print('[INFO] stopped video processing')
                 break
 
@@ -182,7 +183,8 @@ class Mode2:
             if message:
                 print('Make move, then press spacebar')
                 message = False
-            if not key == 32 or not self.FlagTurn:
+            #if not key == 32 or not self.FlagTurn: 
+            if not key == 32:
                 cv2.imshow('original', frame)
                 cv2.imshow('bird view', paper)
                 continue
@@ -199,10 +201,7 @@ class Mode2:
                 shape = self.find_shape(cell)
                 if shape is not None:
                     history[i] = {'shape': shape, 'bbox': (x, y, w, h)}
-                    board.make_move(i, player)
-                else:
-                    ######################## drow nums 
-                    pass    
+                    board.make_move(i, player) 
                 paper = self.draw_shape(paper, shape, (x, y, w, h))
 
             # Check whether game has finished
