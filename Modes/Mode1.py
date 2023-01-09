@@ -34,8 +34,10 @@ class Mode1:
                 self.PenFlag = False
                 self.Sent=False
 
-            elif word == 'toggle':
-                self.BS.TogglePen()
+            elif word == 'slow':
+                pass
+            elif word == 'fast':
+                pass
                 
             elif word in self.home :
                 self.Flag = True
@@ -82,7 +84,6 @@ class Mode1:
         print("Gyroscope Connected")
         xPosition = "ideal"
         yPosition = "ideal"
-        self.BS.PenRaise()
         self.BS.CncHome()
         while True:
             if self.Flag:
