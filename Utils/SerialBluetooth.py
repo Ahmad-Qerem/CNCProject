@@ -110,6 +110,7 @@ class Bluetooth:
 
     def PenDown(self):
         if not self.Pen:
+            self.Pen = True 
             self.SendCommandToCnc("M5")
 
     def TogglePen(self):

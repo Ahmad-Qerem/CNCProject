@@ -197,8 +197,8 @@ def play(vcap):
 
 def RunGame(path):
     global model
-    assert os.path.exists("TicTacToe/data/model.h5"), '{} does not exist'
-    model = load_model("TicTacToe/data/model.h5")
+    assert os.path.exists("/home/aa/graduation project/CNCProject/Modes/TicTacToe/data/model.h5"), '{} does not exist'
+    model = load_model("/home/aa/graduation project/CNCProject/Modes/TicTacToe/data/model.h5")
     vcap = cv2.VideoCapture(path)
     # vcap = cv2.VideoCapture(args.cam)
     winner = play(vcap)

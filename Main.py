@@ -6,7 +6,7 @@ from Modes.Mode2 import Mode2
 from Modes.TicTacToe.play import RunGame
 
 Mode1STR = ["mode 1", "mode one", "mod one",
-            "mod 1", "mod1", "mud1", "mud 1",
+            "mod 1", "mod1", "mud1", "mud 1","mud run",
             "Baldwin", "mullet one", "Northland", "Multan",
             "1", "one", "Note 1", "Note one", "smart one",
             "smart 1", "smart1", "hello"]

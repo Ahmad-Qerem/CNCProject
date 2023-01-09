@@ -6,8 +6,8 @@ from AngleMeterO.AngleMeterO import AngleMeter
 from Recognizer import Recognizer
 class Mode1:
     disconnect = ['disconnect']
-    start = ['start','hello']
-    stop = ['stop']
+    start = ['start','hello','down']
+    stop = ['stop','up']
     home = ['home']
 
     def __init__(self, BluetoothSerial):
@@ -15,7 +15,7 @@ class Mode1:
         self.recognizer = Recognizer()
         self.Flag = False
         self.PenFlag= True
-        self.Sent=False
+        self.Sent=True
         self.recognizer.StartListen(self.callBack)
         print("New Mode1 Object Has been created ")
 
@@ -90,9 +90,11 @@ class Mode1:
 
             if not self.Sent:
                 self.Sent = True
-                if self.PinFlag:
+                if self.PenFlag:
+                    print("this is down")
                     self.BS.PenDown()
                 else:
+                    print("this is up")
                     self.BS.PenRaise()
                 
 
@@ -113,11 +115,11 @@ class Mode1:
             elif y > -60 and y < -30:
                 yPosition = "right"
 
-            #stringToPrint = f"X : {x}\t Y: {y}"
-            #stringToPrint2 = f"X Position : {xPosition}\t Y Position: {yPosition}"
-            #print('-' * len(stringToPrint2))
-            #print(stringToPrint)
-            #print(stringToPrint2)
+            # stringToPrint = f"X : {x}\t Y: {y}"
+            # stringToPrint2 = f"X Position : {xPosition}\t Y Position: {yPosition}"
+            # print('-' * len(stringToPrint2))
+            # print(stringToPrint)
+            # print(stringToPrint2)
             self.PositionToGRBLCommand(xPosition, yPosition)
         angleMeter.StopMeasure()
         print("Gyroscope Disconnected")
