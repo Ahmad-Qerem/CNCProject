@@ -90,7 +90,7 @@ class Mode1:
 
             if not self.Sent:
                 self.Sent = True
-                if self.PinFlag:
+                if self.PenFlag:
                     self.BS.PenDown()
                 else:
                     self.BS.PenRaise()
