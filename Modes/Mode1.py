@@ -16,8 +16,17 @@ class Mode1:
         self.Flag = False
         self.PenFlag= True
         self.Sent=True
+        self.Delay=0.5
         self.recognizer.StartListen(self.callBack)
         print("New Mode1 Object Has been created ")
+
+    def DecreaseDelay(self):
+        if self.Delay >= 0.5 :
+            self.Delay -= 0.5
+
+    def IncreaseDelay(self):
+        if self.Delay <= 2:
+            self.Delay += 0.5
 
     def callBack(self, recognizer, audio):
         print("callBack Mode1")
@@ -35,9 +44,9 @@ class Mode1:
                 self.Sent=False
 
             elif word == 'slow':
-                pass
+                self.IncreaseDelay()
             elif word == 'fast':
-                pass
+                self.DecreaseDelay()
                 
             elif word in self.home :
                 self.Flag = True
@@ -97,7 +106,7 @@ class Mode1:
                     print("this is up")
                     self.BS.PenRaise()
                 
-
+            sleep(self.Delay)
             x = angleMeter.get_kalman_roll()
             y = angleMeter.get_kalman_pitch()
             # angle to position

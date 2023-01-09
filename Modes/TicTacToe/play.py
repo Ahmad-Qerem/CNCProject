@@ -11,6 +11,47 @@ sys.path.append('/home/aa/graduation project/CNCProject/Modes/TicTacToe')
 from alphabeta import Tic, get_enemy, determine
 from utils import detections
 from utils import imutils
+
+sys.path.append('/home/aa/graduation project/CNCProject/Utils')
+from Recognizer import Recognizer
+
+
+FlagTurn=False
+FlagEndGame=False
+def callBack(recognizer, audio):
+    print("callBack Mode2")
+    try:
+        word = recognizer.recognize_google(audio, key=None, language='en-US')
+        if word == "your turn":
+            global FlagTurn
+            FlagTurn = True
+        elif word == "disconnect":
+            global FlagEndGame
+            FlagEndGame = True
+            recognizer.StopListen()
+        else:
+            print(" Something ... Mode 2")
+    except IndexError:
+        print("no internet connection")
+    except LookupError:
+        print("Could not understand audio")
+    except Exception as e:
+        print("error in callback mode 2")
+        print("Error"+str(e))
+
+
+
+BS = None
+recognizer = Recognizer()
+
+
+def SetBluetooth(Bluetooth):
+    global BS
+    BS=Bluetooth
+
+    
+
+
 def parse_arguments(argv):
     parser = argparse.ArgumentParser()
 
@@ -81,12 +122,14 @@ def draw_shape(template, shape, coords):
     if shape == 'O':
         centroid = (x + int(w / 2), y + int(h / 2))
         cv2.circle(template, centroid, 10, (0, 0, 0), 2)
+        #BS.DrawCircle(x, y)
     elif shape == 'X':
         # Draws the 'X' shape
         cv2.line(template, (x + 10, y + 7), (x + w - 10, y + h - 7),
                  (0, 0, 0), 2)
         cv2.line(template, (x + 10, y + h - 7), (x + w - 10, y + 7),
                  (0, 0, 0), 2)
+        #BS.DrawX(x, y)
     return template
 
 
@@ -96,6 +139,11 @@ def play(vcap):
     board = Tic()
     history = {}
     message = True
+    # Draw Board
+    BS.CncHome()
+    BS.DrawBoard()
+    recognizer.StartListen(callBack)
+
     # Start playing
     while True:
         ret, frame = vcap.read()
@@ -105,7 +153,7 @@ def play(vcap):
             break
 
         # Stop
-        if key == ord('q'):
+        if key == ord('q') or FlagEndGame:
             print('[INFO] stopped video processing')
             break
 
@@ -121,7 +169,6 @@ def play(vcap):
             point = (int(c[0]), int(c[1]))
             cv2.circle(img=frame, center=point, radius=2,
                        color=(0, 0, 255), thickness=2)
-        print("-------------")
         # Now working with 'paper' to find grid
         paper_gray = cv2.cvtColor(paper, cv2.COLOR_BGR2GRAY)
         _, paper_thresh = cv2.threshold(
@@ -139,10 +186,19 @@ def play(vcap):
         if message:
             print('Make move, then press spacebar')
             message = False
-        if not key == 32:
+        
+
+        if not key == 32:  
             cv2.imshow('original', frame)
             cv2.imshow('bird view', paper)
             continue
+
+        #if not FlagTurn:
+        #    cv2.imshow('original', frame)
+        #    cv2.imshow('bird view', paper)
+        #    continue
+        #global FlagTurn
+        #FlagTurn = False
         player = 'X'
 
         # User's time to play, detect for each available cell

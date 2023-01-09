@@ -3,7 +3,7 @@ from Utils.Recognizer import Recognizer
 from Utils.SerialBluetooth import Bluetooth
 from Modes.Mode1 import Mode1
 from Modes.Mode2 import Mode2
-from Modes.TicTacToe.play import RunGame
+from Modes.TicTacToe.play import RunGame,SetBluetooth
 
 Mode1STR = ["mode 1", "mode one", "mod one",
             "mod 1", "mod1", "mud1", "mud 1","mud run",
@@ -32,6 +32,7 @@ def callBack(recognizer, audio):
             #XOMode = Mode2(BluetoothSerial)
             #XOMode.RunGame('http://192.168.1.2:8080/video')
             #del XOMode
+            SetBluetooth(BluetoothSerial)
             RunGame('http://192.168.1.2:8080/video')
         elif word == "exit":
             BluetoothSerial.Disconnect()
