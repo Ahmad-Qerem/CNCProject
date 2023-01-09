@@ -18,7 +18,7 @@ class Recognizer:
         with self.mic as source:
             self.recognizer.adjust_for_ambient_noise(source)
             
-#        self.recognizer.adjust_for_ambient_noise(self.mic)
+        #self.recognizer.adjust_for_ambient_noise(self.mic)
         print("Recognizer Is Ready To Listen ")
 
     def StartListen(self, callBack):
