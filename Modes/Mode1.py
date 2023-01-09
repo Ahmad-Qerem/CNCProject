@@ -15,7 +15,7 @@ class Mode1:
         self.recognizer = Recognizer()
         self.Flag = False
         self.PenFlag= True
-        self.Sent=False
+        self.Sent=True
         self.recognizer.StartListen(self.callBack)
         print("New Mode1 Object Has been created ")
 
