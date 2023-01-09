@@ -112,6 +112,9 @@ class Bluetooth:
         if not self.Pen:
             self.SendCommandToCnc("M5")
 
+    def TogglePen(self):
+        self.Pen =not self.Pen
+        
     def Disconnect(self):
         self.PenRaise()
         self.CncHome()

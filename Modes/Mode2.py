@@ -3,14 +3,14 @@ import numpy as np
 import cv2
 import os
 import sys
-sys.path.append('/home/aa/graduation project/CNCProject/Modes/TicTacToe/utils')
-import imutils
-import detections
-sys.path.append('/home/aa/graduation project/CNCProject/Modes/TicTacToe')
-from alphabeta import Tic, get_enemy, determine
+from TicTacToe.alphabeta import Tic,get_enemy,determine
+from TicTacToe.utils import detections
+from TicTacToe.utils import imutils
+from ..Utils.Recognizer import Recognizer
 
-sys.path.append('/home/aa/graduation project/CNCProject/Utils')
-from Recognizer import Recognizer
+
+
+
 
 
 
@@ -23,21 +23,14 @@ class Mode2:
         self.Word=""
         self.FlagEndGame=False
         self.FlagTurn=False
-        self.RunGame('http://192.168.1.2:8080/video')
         print("New Mode2 Object Has been created ")
 
     def callBack(self, recognizer, audio):
         print("callBack Mode2")
         try:
-            self.word = recognizer.recognize_google(audio, key=None, language='en-US')
-            if self.word == "start":
-                self.BS.PenDown()
-            elif self.word == "stop":
-                self.BS.PenRaise()
-            elif self.word == "home":
-                self.BS.PenRaise()
-                self.BS.CncHome()
-            elif self.word == "your turn":
+            self.word = recognizer.recognize_google(
+                audio_data=audio, key=None, language='en-US')
+            if self.word == "your turn":
                 self.FlagTurn=True
             elif self.word == "disconnect":
                 self.FlagEndGame=True
@@ -45,10 +38,10 @@ class Mode2:
             else:
                 print(" Something ... Mode 2")
 
-        except LookupError:
-            print("Could not understand audio")
         except IndexError:
             print("no internet connection")
+        except LookupError:
+            print("Could not understand audio")
         except Exception as e:
             print("error in callback mode 2")
             print("Error"+str(e))
@@ -110,9 +103,10 @@ class Mode2:
     def draw_shape(self,template, shape, coords):
         """Draw on a cell the shape which resides in it"""
         x, y, w, h = coords
+        print('X = {} , Y = {} , width = {} , Hight = {}', x, y, w, h)
         if shape == 'O':
             centroid = (x + int(w / 2), y + int(h / 2))
-            self.BS.DrawCircle(x,y)
+            #self.BS.DrawCircle(x,y)
             cv2.circle(template, centroid, 10, (0, 0, 0), 2)
         elif shape == 'X':
             # Draws the 'X' shape
@@ -120,7 +114,7 @@ class Mode2:
                     (0, 0, 0), 2)
             cv2.line(template, (x + 10, y + h - 7), (x + w - 10, y + 7),
                     (0, 0, 0), 2)
-            self.BS.DrawX(x, y)
+            #self.BS.DrawX(x, y)
         return template
 
 
@@ -177,7 +171,8 @@ class Mode2:
             if message:
                 print('Make move, then press spacebar')
                 message = False
-            if not key == 32 or not self.FlagTurn:
+            #if not key == 32 or not self.FlagTurn:
+            if not key == 32:
                 cv2.imshow('original', frame)
                 cv2.imshow('bird view', paper)
                 continue
