@@ -3,10 +3,11 @@ import numpy as np
 import cv2
 import os
 import sys
-from TicTacToe.alphabeta import Tic,get_enemy,determine
-from TicTacToe.utils import detections
-from TicTacToe.utils import imutils
-from ..Utils.Recognizer import Recognizer
+from Modes.TicTacToe.alphabeta import Tic,get_enemy,determine
+from Modes.TicTacToe.utils import detections
+from Modes.TicTacToe.utils import imutils
+sys.path.append('/home/aa/graduation project/CNCProject/Utils')
+from Utils.Recognizer import Recognizer
 
 
 

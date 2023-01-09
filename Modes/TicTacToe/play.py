@@ -7,7 +7,7 @@ import argparse
 import numpy as np
 from keras.models import load_model
 
-sys.path.append('TicTacToe')
+sys.path.append('/home/aa/graduation project/CNCProject/Modes/TicTacToe')
 from alphabeta import Tic, get_enemy, determine
 from utils import detections
 from utils import imutils
