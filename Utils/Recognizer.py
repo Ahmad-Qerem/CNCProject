@@ -13,12 +13,12 @@ class Recognizer:
 
     def ConnectRecognizer(self):
         self.recognizer = sr.Recognizer()
-        self.mic = sr.Microphone(device_index=1)
+        self.mic = sr.Microphone(device_index=0)
         # Remove noise from the background
         with self.mic as source:
             self.recognizer.adjust_for_ambient_noise(source)
             
-        self.recognizer.adjust_for_ambient_noise(self.mic)
+        #self.recognizer.adjust_for_ambient_noise(self.mic)
         print("Recognizer Is Ready To Listen ")
 
     def StartListen(self, callBack):
