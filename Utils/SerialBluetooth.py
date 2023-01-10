@@ -80,14 +80,14 @@ class Bluetooth:
         self.PenRaise()
         self.AbsoluteMove(X, Y)
         self.PenDown()
-        self.SendGCode('C.gcode')
+        self.SendGCode('/home/aa/graduation project/CNCProject/Utils/C.gcode')
 
 
     def DrawX(self, X, Y):
         self.PenRaise()
         self.AbsoluteMove(X, Y)
         self.PenDown()
-        self.SendGCode('draw_x.g')
+        self.SendGCode('/home/aa/graduation project/CNCProject/Utils/draw_x.g')
 
 
     def SendGCode(self, filename):

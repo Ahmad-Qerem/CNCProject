@@ -122,7 +122,7 @@ def draw_shape(template, shape, coords):
     if shape == 'O':
         centroid = (x + int(w / 2), y + int(h / 2))
         cv2.circle(template, centroid, 10, (0, 0, 0), 2)
-        #BS.DrawCircle(x, y)
+        BS.DrawCircle(x, y)
     elif shape == 'X':
         # Draws the 'X' shape
         cv2.line(template, (x + 10, y + 7), (x + w - 10, y + h - 7),
@@ -141,7 +141,7 @@ def play(vcap):
     message = True
     # Draw Board
     BS.CncHome()
-    BS.DrawBoard()
+    #BS.DrawBoard()                uncommont this
     recognizer.StartListen(callBack)
 
     # Start playing
