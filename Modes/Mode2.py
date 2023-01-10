@@ -9,13 +9,6 @@ from Modes.TicTacToe.utils import imutils
 sys.path.append('/home/aa/graduation project/CNCProject/Utils')
 from Utils.Recognizer import Recognizer
 
-
-
-
-
-
-
-
 class Mode2:
 
     def __init__(self, BluetoothSerial):
@@ -107,7 +100,7 @@ class Mode2:
         print('X = {} , Y = {} , width = {} , Hight = {}', x, y, w, h)
         if shape == 'O':
             centroid = (x + int(w / 2), y + int(h / 2))
-            #self.BS.DrawCircle(x,y)
+            self.BS.DrawCircle(x,y)
             cv2.circle(template, centroid, 10, (0, 0, 0), 2)
         elif shape == 'X':
             # Draws the 'X' shape

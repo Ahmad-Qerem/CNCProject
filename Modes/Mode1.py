@@ -75,17 +75,17 @@ class Mode1:
         elif xPosition == "backward" and yPosition == "ideal":
             self.BS.SendPositionToCnc(-10, 0)
         elif xPosition == "ideal" and yPosition == "right":
-            self.BS.SendPositionToCnc(0, 10)
-        elif xPosition == "ideal" and yPosition == "left":
             self.BS.SendPositionToCnc(0, -10)
+        elif xPosition == "ideal" and yPosition == "left":
+            self.BS.SendPositionToCnc(0, 10)
         elif xPosition == "forward" and yPosition == "right":
-            self.BS.SendPositionToCnc(10, 10)
-        elif xPosition == "backward" and yPosition == "left":
-            self.BS.SendPositionToCnc(-10, -10)
-        elif xPosition == "backward" and yPosition == "right":
-            self.BS.SendPositionToCnc(-10, 10)
-        elif xPosition == "forward" and yPosition == "left":
             self.BS.SendPositionToCnc(10, -10)
+        elif xPosition == "backward" and yPosition == "left":
+            self.BS.SendPositionToCnc(-10, 10)
+        elif xPosition == "backward" and yPosition == "right":
+            self.BS.SendPositionToCnc(-10, -10)
+        elif xPosition == "forward" and yPosition == "left":
+            self.BS.SendPositionToCnc(10, 10)
 
     def GyroscopeToCnc(self):
         angleMeter = AngleMeter()
@@ -130,5 +130,6 @@ class Mode1:
             # print(stringToPrint)
             # print(stringToPrint2)
             self.PositionToGRBLCommand(xPosition, yPosition)
+        self.BS.PenRaise()
         angleMeter.StopMeasure()
         print("Gyroscope Disconnected")
