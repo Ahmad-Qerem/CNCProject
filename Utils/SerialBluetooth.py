@@ -35,14 +35,13 @@ class Bluetooth:
         print(GRBLOut.strip().decode("utf-8"))
 
     def SendPositionToCnc(self, X=0, Y=0):
-        self.SendCommandToCnc('G91')
         if (self.XVal+X) < 10 or (self.XVal+X) > 800:
             print("Out Of Range X")
             if (self.YVal+Y) < 10 or (self.YVal+Y) > 450:
                 print("Out Of Range Y")
             else:
                 self.YVal += Y
-                CommandToSend = f"G1X{0}Y{Y}F200"
+                CommandToSend = f"G1Y{Y}"
                 self.SendCommandToCnc(CommandToSend)
         elif (self.YVal+Y) < 10 or (self.YVal+Y) > 450:
             print("Out Of Range Y")
@@ -50,12 +49,12 @@ class Bluetooth:
                print("Out Of Range X")
             else:
                 self.XVal += X
-                CommandToSend = f"G1X{X}Y{0}F200"
+                CommandToSend = f"G1X{X}"
                 self.SendCommandToCnc(CommandToSend)
         else:
             self.XVal += X
             self.YVal += Y
-            CommandToSend = f"G1X{X}Y{Y}F200"
+            CommandToSend = f"G1X{X}Y{Y}"
             self.SendCommandToCnc(CommandToSend)
 
     def CncHome(self):
@@ -69,7 +68,20 @@ class Bluetooth:
         print("Homing Finished")
 
     def DrawBoard(self):
-        self.SendGCode('/home/aa/graduation project/CNCProject/Utils/board.g')
+        self.SendCommandToCnc('M3S90')
+        self.SendCommandToCnc('G90')
+        self.SendCommandToCnc('G1 F2000')
+        self.SendCommandToCnc('G1 X50 Y90')
+        self.SendCommandToCnc('command')
+        self.SendCommandToCnc('command')
+        self.SendCommandToCnc('command')
+        self.SendCommandToCnc('command')
+        self.SendCommandToCnc('command')
+        self.SendCommandToCnc('command')
+        self.SendCommandToCnc('command')
+
+
+        self.SendGCode('/home/aa/graduation project/CNCProject/Utils/boardV2.g')
 
     def AbsoluteMove(self,X,Y):
         self.SendCommandToCnc('G90')

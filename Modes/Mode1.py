@@ -94,6 +94,9 @@ class Mode1:
         xPosition = "ideal"
         yPosition = "ideal"
         self.BS.CncHome()
+        self.BS.SendCommandToCnc('G91')
+        self.BS.SendCommandToCnc('G1 F2000')
+
         while True:
             if self.Flag:
                 break
