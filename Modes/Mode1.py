@@ -1,4 +1,3 @@
-
 import sys
 from time import sleep
 sys.path.append('/home/aa/graduation project/CNCProject/Utils')
@@ -16,17 +15,8 @@ class Mode1:
         self.Flag = False
         self.PenFlag= True
         self.Sent=True
-        self.Delay=0.5
         self.recognizer.StartListen(self.callBack)
         print("New Mode1 Object Has been created ")
-
-    def DecreaseDelay(self):
-        if self.Delay >= 0.5 :
-            self.Delay -= 0.5
-
-    def IncreaseDelay(self):
-        if self.Delay <= 2:
-            self.Delay += 0.5
 
     def callBack(self, recognizer, audio):
         print("callBack Mode1")
@@ -44,9 +34,9 @@ class Mode1:
                 self.Sent=False
 
             elif word == 'slow':
-                self.IncreaseDelay()
+                pass
             elif word == 'fast':
-                self.DecreaseDelay()
+                pass
                 
             elif word in self.home :
                 self.Flag = True
@@ -71,21 +61,21 @@ class Mode1:
         if xPosition == "ideal" and yPosition == "ideal":
             pass
         elif xPosition == "forward" and yPosition == "ideal":
-            self.BS.SendPositionToCnc(-10, 0)
-        elif xPosition == "backward" and yPosition == "ideal":
             self.BS.SendPositionToCnc(10, 0)
+        elif xPosition == "backward" and yPosition == "ideal":
+            self.BS.SendPositionToCnc(-10, 0)
         elif xPosition == "ideal" and yPosition == "right":
             self.BS.SendPositionToCnc(0, 10)
         elif xPosition == "ideal" and yPosition == "left":
             self.BS.SendPositionToCnc(0, -10)
         elif xPosition == "forward" and yPosition == "right":
-            self.BS.SendPositionToCnc(-10, 10)
-        elif xPosition == "backward" and yPosition == "left":
-            self.BS.SendPositionToCnc(10, -10)
-        elif xPosition == "backward" and yPosition == "right":
             self.BS.SendPositionToCnc(10, 10)
-        elif xPosition == "forward" and yPosition == "left":
+        elif xPosition == "backward" and yPosition == "left":
             self.BS.SendPositionToCnc(-10, -10)
+        elif xPosition == "backward" and yPosition == "right":
+            self.BS.SendPositionToCnc(-10, 10)
+        elif xPosition == "forward" and yPosition == "left":
+            self.BS.SendPositionToCnc(10, -10)
 
     def GyroscopeToCnc(self):
         angleMeter = AngleMeter()
@@ -94,7 +84,6 @@ class Mode1:
         xPosition = "ideal"
         yPosition = "ideal"
         self.BS.CncHome()
-
         while True:
             if self.Flag:
                 break
@@ -107,7 +96,7 @@ class Mode1:
                     print("this is up")
                     self.BS.PenRaise()
                 
-            sleep(self.Delay)
+
             x = angleMeter.get_kalman_roll()
             y = angleMeter.get_kalman_pitch()
             # angle to position
@@ -131,6 +120,5 @@ class Mode1:
             # print(stringToPrint)
             # print(stringToPrint2)
             self.PositionToGRBLCommand(xPosition, yPosition)
-        self.BS.PenRaise()
         angleMeter.StopMeasure()
         print("Gyroscope Disconnected")

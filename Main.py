@@ -33,7 +33,7 @@ def callBack(recognizer, audio):
             #XOMode.RunGame('http://192.168.1.2:8080/video')
             #del XOMode
             SetBluetooth(BluetoothSerial)
-            RunGame('http://192.168.1.8:8080/video')
+            RunGame('http://192.168.1.7:8080/video')
         elif word == "exit":
             BluetoothSerial.Disconnect()
             recognizer.StopListen()
