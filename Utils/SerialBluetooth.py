@@ -29,6 +29,7 @@ class Bluetooth:
     def SendCommandToCnc(self, Command):
         print("Sending :"+Command)
         x = Command+'\r \n'
+        sleep(0.5)
         self.BlueToothSerial.write(x.encode("utf-8"))
         GRBLOut = self.BlueToothSerial.readline()
         print(GRBLOut.strip().decode("utf-8"))
@@ -40,7 +41,7 @@ class Bluetooth:
                 print("Out Of Range Y")
             else:
                 self.YVal += Y
-                CommandToSend = f"G91X0Y{Y}F2000"
+                CommandToSend = f"G91 X{0} Y{Y} F200"
                 self.SendCommandToCnc(CommandToSend)
         elif (self.YVal+Y) < 10 or (self.YVal+Y) > 450:
             print("Out Of Range Y")
@@ -48,12 +49,12 @@ class Bluetooth:
                print("Out Of Range X")
             else:
                 self.XVal += X
-                CommandToSend = f"G91X{X}Y0F2000"
+                CommandToSend = f"G91 X{X} Y{0} F200"
                 self.SendCommandToCnc(CommandToSend)
         else:
             self.XVal += X
             self.YVal += Y
-            CommandToSend = f"G91X{X}Y{Y}F2000"
+            CommandToSend = f"G91 X{X} Y{Y} F200"
             self.SendCommandToCnc(CommandToSend)
 
     def CncHome(self):
@@ -91,6 +92,7 @@ class Bluetooth:
     def SendGCode(self, filename):
             with open(filename) as f:
                 while (True):
+                    sleep(1)
                     line = f.readline().strip('\n')
                     if not line:
                         break

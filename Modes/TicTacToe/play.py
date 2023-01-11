@@ -128,7 +128,7 @@ def play(vcap):
     message = True
     # Draw Board
     BS.CncHome()
-    BS.DrawBoard()
+    # BS.DrawBoard()
     BS.AbsoluteMove(50,50)
     recognizer.StartListen(callBack)
 
@@ -213,8 +213,9 @@ def play(vcap):
         board.make_move(computer_move, player)
         history[computer_move] = {'shape': 'O', 'bbox': grid[computer_move]}
         paper = draw_shape(paper, 'O', grid[computer_move])
-        xm, ym, wm, hm = computer_move
+        xm, ym, wm, hm = grid[computer_move]
         print("Com Move To ")
+        print(grid)
         BS.AbsoluteMove(xm, ym)
         # Check whether game has finished
         if board.complete():

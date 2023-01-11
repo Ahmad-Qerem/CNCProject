@@ -100,7 +100,7 @@ class Mode2:
         print('X = {} , Y = {} , width = {} , Hight = {}', x, y, w, h)
         if shape == 'O':
             centroid = (x + int(w / 2), y + int(h / 2))
-            self.BS.DrawCircle(x,y)
+            # self.BS.DrawCircle(x,y)
             cv2.circle(template, centroid, 10, (0, 0, 0), 2)
         elif shape == 'X':
             # Draws the 'X' shape
@@ -119,8 +119,8 @@ class Mode2:
         history = {}
         message = True
         # Draw Board
-        self.BS.CncHome()
-        self.BS.DrawBoard()
+        # self.BS.CncHome()
+        # self.BS.DrawBoard()
         self.recognizer.StartListen(self.callBack)
 
         # Start playing
