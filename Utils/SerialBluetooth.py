@@ -40,7 +40,7 @@ class Bluetooth:
                 print("Out Of Range Y")
             else:
                 self.YVal += Y
-                CommandToSend = f"G91Y{Y}F2000"
+                CommandToSend = f"G91X0Y{Y}F2000"
                 self.SendCommandToCnc(CommandToSend)
         elif (self.YVal+Y) < 10 or (self.YVal+Y) > 450:
             print("Out Of Range Y")
@@ -48,7 +48,7 @@ class Bluetooth:
                print("Out Of Range X")
             else:
                 self.XVal += X
-                CommandToSend = f"G91X{X}F2000"
+                CommandToSend = f"G91X{X}Y0F2000"
                 self.SendCommandToCnc(CommandToSend)
         else:
             self.XVal += X
@@ -69,10 +69,9 @@ class Bluetooth:
         self.SendGCode('/home/aa/graduation project/CNCProject/Utils/boardV2.g')
 
     def AbsoluteMove(self,X,Y):
-        self.SendCommandToCnc('G90')
         self.XVal=X
         self.YVal=Y
-        command=f"G1X{X}Y{Y}"
+        command=f"G90X{X}Y{Y}"
         self.SendCommandToCnc(command)
 
     def DrawCircle(self,X,Y):

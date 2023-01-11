@@ -107,7 +107,6 @@ class Mode1:
                     print("this is up")
                     self.BS.PenRaise()
                 
-            sleep(self.Delay)
             x = angleMeter.get_kalman_roll()
             y = angleMeter.get_kalman_pitch()
             # angle to position
