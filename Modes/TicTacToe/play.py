@@ -109,7 +109,7 @@ def draw_shape(template, shape, coords):
     if shape == 'O':
         centroid = (x + int(w / 2), y + int(h / 2))
         cv2.circle(template, centroid, 10, (0, 0, 0), 2)
-        BS.DrawCircle(x, y)
+        #BS.DrawCircle(x, y)
     elif shape == 'X':
         # Draws the 'X' shape
         cv2.line(template, (x + 10, y + 7), (x + w - 10, y + h - 7),
@@ -214,7 +214,7 @@ def play(vcap):
         history[computer_move] = {'shape': 'O', 'bbox': grid[computer_move]}
         paper = draw_shape(paper, 'O', grid[computer_move])
         xm, ym, wm, hm = computer_move
-
+        print("Com Move To ")
         BS.AbsoluteMove(xm, ym)
         # Check whether game has finished
         if board.complete():

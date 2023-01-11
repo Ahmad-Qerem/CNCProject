@@ -40,7 +40,7 @@ class Bluetooth:
                 print("Out Of Range Y")
             else:
                 self.YVal += Y
-                CommandToSend = f"G92Y{Y}F2000"
+                CommandToSend = f"G91Y{Y}F2000"
                 self.SendCommandToCnc(CommandToSend)
         elif (self.YVal+Y) < 10 or (self.YVal+Y) > 450:
             print("Out Of Range Y")
@@ -48,12 +48,12 @@ class Bluetooth:
                print("Out Of Range X")
             else:
                 self.XVal += X
-                CommandToSend = f"G92X{X}F2000"
+                CommandToSend = f"G91X{X}F2000"
                 self.SendCommandToCnc(CommandToSend)
         else:
             self.XVal += X
             self.YVal += Y
-            CommandToSend = f"G92X{X}Y{Y}F2000"
+            CommandToSend = f"G91X{X}Y{Y}F2000"
             self.SendCommandToCnc(CommandToSend)
 
     def CncHome(self):
@@ -61,7 +61,6 @@ class Bluetooth:
         self.SendCommandToCnc("$X")
         self.PenRaise()
         self.SendCommandToCnc("$H")
-        self.SendCommandToCnc("G92 X0 Y0")
         self.XVal = 0
         self.YVal = 0
         print("Homing Finished")
