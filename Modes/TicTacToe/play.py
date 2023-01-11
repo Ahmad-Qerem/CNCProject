@@ -40,7 +40,6 @@ def callBack(recognizer, audio):
         print("Error"+str(e))
 
 
-
 BS = None
 recognizer = Recognizer()
 
@@ -48,19 +47,6 @@ recognizer = Recognizer()
 def SetBluetooth(Bluetooth):
     global BS
     BS=Bluetooth
-
-    
-
-
-def parse_arguments(argv):
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument('cam', type=int,
-                        help='USB camera for video streaming')
-    parser.add_argument('--model', '-m', type=str, default='data/model.h5',
-                        help='model file (.h5) to detect Xs and Os')
-
-    return parser.parse_args()
 
 
 def find_sheet_paper(frame, thresh, add_margin=True):
@@ -119,6 +105,7 @@ def get_board_template(thresh):
 def draw_shape(template, shape, coords):
     """Draw on a cell the shape which resides in it"""
     x, y, w, h = coords
+    print('X = {} , Y = {} , W = {} , H = {}', x, y, w, h)
     if shape == 'O':
         centroid = (x + int(w / 2), y + int(h / 2))
         cv2.circle(template, centroid, 10, (0, 0, 0), 2)
@@ -141,7 +128,7 @@ def play(vcap):
     message = True
     # Draw Board
     BS.CncHome()
-    #BS.DrawBoard()                uncommont this
+    #BS.DrawBoard()
     recognizer.StartListen(callBack)
 
     # Start playing
@@ -225,7 +212,8 @@ def play(vcap):
         board.make_move(computer_move, player)
         history[computer_move] = {'shape': 'O', 'bbox': grid[computer_move]}
         paper = draw_shape(paper, 'O', grid[computer_move])
-
+        xm, ym, wm, hm = computer_move
+        BS.AbsoluteMove(xm, ym)
         # Check whether game has finished
         if board.complete():
             break
