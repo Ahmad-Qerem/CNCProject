@@ -29,7 +29,6 @@ class Bluetooth:
     def SendCommandToCnc(self, Command):
         print("Sending :"+Command)
         x = Command+'\r \n'
-        sleep(0.2)
         self.BlueToothSerial.write(x.encode("utf-8"))
         GRBLOut = self.BlueToothSerial.readline()
         print(GRBLOut.strip().decode("utf-8"))
