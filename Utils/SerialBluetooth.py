@@ -9,10 +9,22 @@ class Bluetooth:
         self.YVal = 0
         self.Pen=True
         self.BlueToothSerial=None
+        self.BoardPositions = [(150, 70), (110,70),
+                               (70,70), (150, 110), (110, 110), (70, 110), (150, 150), (110, 150), (70, 150)]
         self.ConnectBlueTooth()
         print("New Bluetooth Object Has been created ")
 
 
+    def DrawMove(self,Player='O',Index=0):
+        self.AbsoluteMove(self.BoardPositions[Index])
+        if Player == 'O':
+            self.SendGCode(
+                '/home/aa/graduation project/CNCProject/Utils/draw_o.g')
+        else :
+            self.SendGCode(
+                '/home/aa/graduation project/CNCProject/Utils/draw_x.g')
+        self.AbsoluteMove(50,50)
+        
     def ConnectBlueTooth(self):
         try:
             self.BlueToothSerial = serial.Serial("/dev/rfcomm0", 115200)

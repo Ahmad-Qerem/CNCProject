@@ -2,6 +2,7 @@
 
 import os
 import sys
+from time import sleep
 import cv2
 import argparse
 import numpy as np
@@ -128,8 +129,10 @@ def play(vcap):
     message = True
     # Draw Board
     BS.CncHome()
-    # BS.DrawBoard()
-    BS.AbsoluteMove(50,50)
+    BS.DrawBoard()
+    sleep(10)
+    BS.AbsoluteMove(10,10)
+    sleep(2)
     recognizer.StartListen(callBack)
 
     # Start playing
@@ -201,6 +204,7 @@ def play(vcap):
             if shape is not None:
                 history[i] = {'shape': shape, 'bbox': (x, y, w, h)}
                 board.make_move(i, player)
+                BS.DrawMove(player,i)
             paper = draw_shape(paper, shape, (x, y, w, h))
 
         # Check whether game has finished
@@ -211,12 +215,9 @@ def play(vcap):
         player = get_enemy(player)
         computer_move = determine(board, player)
         board.make_move(computer_move, player)
+        BS.DrawMove(player, computer_move)
         history[computer_move] = {'shape': 'O', 'bbox': grid[computer_move]}
         paper = draw_shape(paper, 'O', grid[computer_move])
-        xm, ym, wm, hm = grid[computer_move]
-        print("Com Move To ")
-        print(grid)
-        BS.AbsoluteMove(xm, ym)
         # Check whether game has finished
         if board.complete():
             break

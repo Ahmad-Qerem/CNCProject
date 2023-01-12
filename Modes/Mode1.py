@@ -93,7 +93,6 @@ class Mode1:
                 if self.PenFlag:
                     self.BS.PenDown()
                 else:
-                    print("this is up")
                     self.BS.PenRaise()
                 
             x = angleMeter.get_kalman_roll()
@@ -119,5 +118,6 @@ class Mode1:
             # print(stringToPrint)
             # print(stringToPrint2)
             self.PositionToGRBLCommand(xPosition, yPosition)
+        
         angleMeter.StopMeasure()
         print("Gyroscope Disconnected")
