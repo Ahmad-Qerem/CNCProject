@@ -16,14 +16,19 @@ class Bluetooth:
 
 
     def DrawMove(self,Player='O',Index=0):
-        self.AbsoluteMove(self.BoardPositions[Index][0],self.BoardPositions[Index][1])
+        Offset=10
+        X,Y = self.BoardPositions[Index]
+        X2, Y2 = X+Offset, Y+Offset
         if Player == 'O':
-            self.SendGCode(
-                '/home/aa/graduation project/CNCProject/Utils/draw_o.g')
+            self.AbsoluteMove(X2,Y2)
+            self.SendCommandToCnc('M5')
+            self.SendCommandToCnc('G2 X{X2} Y{Y2} I-10 J-10')
+            self.SendCommandToCnc('M3S90')
         else :
+            self.AbsoluteMove(X,Y)
             self.SendGCode(
                 '/home/aa/graduation project/CNCProject/Utils/draw_x.g')
-        self.AbsoluteMove(40,40)
+        self.AbsoluteMove(20,20)
         
     def ConnectBlueTooth(self):
         try:
