@@ -21,13 +21,14 @@ class Bluetooth:
         X2, Y2 = X+Offset, Y+Offset
         if Player == 'O':
             self.AbsoluteMove(X2,Y2)
-            self.SendCommandToCnc('M5')
-            self.SendCommandToCnc('G2 X{X2} Y{Y2} I-10 J-10')
-            self.SendCommandToCnc('M3S90')
+            self.SendGCode(
+                '/home/aa/graduation project/CNCProject/Utils/draw_o.g')
         else :
-            self.AbsoluteMove(X,Y)
+            self.AbsoluteMove(X, Y)
             self.SendGCode(
                 '/home/aa/graduation project/CNCProject/Utils/draw_x.g')
+            
+        sleep(5)    
         self.AbsoluteMove(20,20)
         
     def ConnectBlueTooth(self):
@@ -89,7 +90,7 @@ class Bluetooth:
     def AbsoluteMove(self,X,Y):
         self.XVal=X
         self.YVal=Y
-        command=f"G90X{X}Y{Y}"
+        command=f"G0X{X}Y{Y}"
         self.SendCommandToCnc(command)
 
 
