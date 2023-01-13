@@ -130,8 +130,8 @@ def play(vcap):
     # Draw Board
     BS.CncHome()
     BS.DrawBoard()
-    sleep(10)
-    BS.AbsoluteMove(10,10)
+    # sleep(10)
+    BS.AbsoluteMove(30,30)
     sleep(2)
     recognizer.StartListen(callBack)
 
