@@ -46,7 +46,6 @@ class Mode1:
 
             elif word in self.disconnect:
                 self.Flag = True
-                self.recognizer.StopListen()
             else:
                 print(" Something ... Mode 1")
         except IndexError:
@@ -119,5 +118,6 @@ class Mode1:
             # print(stringToPrint2)
             self.PositionToGRBLCommand(xPosition, yPosition)
         
+        self.recognizer.StopListen()
         angleMeter.StopMeasure()
         print("Gyroscope Disconnected")
