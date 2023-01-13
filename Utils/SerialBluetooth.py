@@ -16,14 +16,14 @@ class Bluetooth:
 
 
     def DrawMove(self,Player='O',Index=0):
-        self.AbsoluteMove(self.BoardPositions[Index])
+        self.AbsoluteMove(self.BoardPositions[Index][0],self.BoardPositions[Index][1])
         if Player == 'O':
             self.SendGCode(
                 '/home/aa/graduation project/CNCProject/Utils/draw_o.g')
         else :
             self.SendGCode(
                 '/home/aa/graduation project/CNCProject/Utils/draw_x.g')
-        self.AbsoluteMove(50,50)
+        self.AbsoluteMove(40,40)
         
     def ConnectBlueTooth(self):
         try:
@@ -41,8 +41,8 @@ class Bluetooth:
     def SendCommandToCnc(self, Command):
         print("Sending :"+Command)
         x = Command+'\r \n'
-        sleep(0.5)
         self.BlueToothSerial.write(x.encode("utf-8"))
+        sleep(0.3)
         GRBLOut = self.BlueToothSerial.readline()
         print(GRBLOut.strip().decode("utf-8"))
 
@@ -86,12 +86,6 @@ class Bluetooth:
         self.YVal=Y
         command=f"G90X{X}Y{Y}"
         self.SendCommandToCnc(command)
-
-    def DrawCircle(self,X,Y):
-        self.PenRaise()
-        self.AbsoluteMove(X, Y)
-        self.PenDown()
-        self.SendGCode('/home/aa/graduation project/CNCProject/Utils/C.gcode')
 
 
     def DrawX(self, X, Y):
