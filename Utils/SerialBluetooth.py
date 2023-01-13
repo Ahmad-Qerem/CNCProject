@@ -22,8 +22,10 @@ class Bluetooth:
         if Player == 'O':
             self.AbsoluteMove(X2,Y2)
             self.SendCommandToCnc('M5')
-            self.SendCommandToCnc('G2 X{X2} Y{Y2} I-10 J-10')
+            commandToSend = f"G2 X{X2} Y{Y2} I-10 J-10"
+            self.SendCommandToCnc(commandToSend)
             self.SendCommandToCnc('M3S90')
+            self.AbsoluteMove(20,20)
         else :
             self.AbsoluteMove(X,Y)
             self.SendGCode(
