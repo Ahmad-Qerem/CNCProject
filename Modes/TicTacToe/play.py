@@ -152,8 +152,12 @@ def play(vcap):
         # otherwise try moving it until they're well detected
         for c in corners:
             point = (int(c[0]), int(c[1]))
-            cv2.circle(img=frame, center=point, radius=2,
-                       color=(0, 0, 255), thickness=2)
+            try :
+                cv2.circle(img=frame, center=point, radius=2,
+                        color=(0, 0, 255), thickness=2)
+            except Exception as e :
+                continue
+            
         # Now working with 'paper' to find grid
         paper_gray = cv2.cvtColor(paper, cv2.COLOR_BGR2GRAY)
         _, paper_thresh = cv2.threshold(

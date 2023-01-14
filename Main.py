@@ -15,7 +15,7 @@ Mode1STR = ["mode 1", "mode one", "mod one",
 Mode2STR = ["mode 2", "mode two", "mod two",
             "mod 2", "mod2", "mud2", "mud 2", "hi"]
 
-Mode2STR = ["mode 3", "mode three", "mod three",
+Mode3STR = ["mode 3", "mode three", "mod three",
             "mod 3", "mod3", "mud3", "mud 3"]
 
 BluetoothSerial = Bluetooth()
@@ -41,6 +41,7 @@ def callBack(recognizer, audio):
             RunGame('http://192.168.1.7:8080/video')
         elif (word in Mode3STR):
             WriteMode = Mode3(BluetoothSerial)
+            WriteMode.ActiveMode3(BluetoothSerial)
 
         elif word == "exit":
             BluetoothSerial.Disconnect()
