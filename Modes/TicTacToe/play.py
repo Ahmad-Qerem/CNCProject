@@ -34,6 +34,7 @@ def callBack(recognizer, audio):
             print(" Something ... Mode 2")
     except IndexError:
         print("no internet connection")
+        print("ERROR"+str(IndexError))
     except LookupError:
         print("Could not understand audio")
     except Exception as e:
@@ -106,7 +107,7 @@ def get_board_template(thresh):
 def draw_shape(template, shape, coords):
     """Draw on a cell the shape which resides in it"""
     x, y, w, h = coords
-    print('X = {} , Y = {} , W = {} , H = {}', x, y, w, h)
+    # print('X = {} , Y = {} , W = {} , H = {}', x, y, w, h)
     if shape == 'O':
         centroid = (x + int(w / 2), y + int(h / 2))
         cv2.circle(template, centroid, 10, (0, 0, 0), 2)
