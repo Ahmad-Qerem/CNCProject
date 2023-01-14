@@ -198,7 +198,8 @@ def play(vcap):
             if shape is not None:
                 history[i] = {'shape': shape, 'bbox': (x, y, w, h)}
                 board.make_move(i, player)
-                BS.DrawMove(player,i)
+                #BS.DrawMove(player,i)
+
             paper = draw_shape(paper, shape, (x, y, w, h))
 
         # Check whether game has finished
@@ -210,6 +211,7 @@ def play(vcap):
         computer_move = determine(board, player)
         board.make_move(computer_move, player)
         BS.DrawMove(player, computer_move)
+        sleep(5)
         history[computer_move] = {'shape': 'O', 'bbox': grid[computer_move]}
         paper = draw_shape(paper, 'O', grid[computer_move])
         # Check whether game has finished
