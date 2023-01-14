@@ -15,7 +15,7 @@ Mode1STR = ["mode 1", "mode one", "mod one",
 Mode2STR = ["mode 2", "mode two", "mod two",
             "mod 2", "mod2", "mud2", "mud 2", "hi"]
 
-Mode2STR = ["mode 3", "mode three", "mod three",
+Mode3STR = ["mode 3", "mode three", "mod three",
             "mod 3", "mod3", "mud3", "mud 3"]
 
 BluetoothSerial = Bluetooth()
