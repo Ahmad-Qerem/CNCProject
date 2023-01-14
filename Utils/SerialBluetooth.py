@@ -28,7 +28,7 @@ class Bluetooth:
             self.SendGCode(
                 '/home/aa/graduation project/CNCProject/Utils/draw_x.g')
             
-        sleep(5)    
+        sleep(1)    
         self.AbsoluteMove(20,20)
         
     def ConnectBlueTooth(self):

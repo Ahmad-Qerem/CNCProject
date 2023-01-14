@@ -34,6 +34,7 @@ def callBack(recognizer, audio):
             print(" Something ... Mode 2")
     except IndexError:
         print("no internet connection")
+        print("ERROR"+str(IndexError))
     except LookupError:
         print("Could not understand audio")
     except Exception as e:
@@ -106,7 +107,7 @@ def get_board_template(thresh):
 def draw_shape(template, shape, coords):
     """Draw on a cell the shape which resides in it"""
     x, y, w, h = coords
-    print('X = {} , Y = {} , W = {} , H = {}', x, y, w, h)
+    # print('X = {} , Y = {} , W = {} , H = {}', x, y, w, h)
     if shape == 'O':
         centroid = (x + int(w / 2), y + int(h / 2))
         cv2.circle(template, centroid, 10, (0, 0, 0), 2)
@@ -126,12 +127,7 @@ def play(vcap):
     history = {}
     message = True
     # Draw Board
-    BS.CncHome()
-    BS.DrawBoard()
-    # sleep(15)
-    BS.AbsoluteMove(20,20)
-    sleep(3)
-    recognizer.StartListen(callBack)
+
 
     # Start playing
     while True:
@@ -242,6 +238,12 @@ def play(vcap):
 
 
 def RunGame(path):
+    BS.CncHome()
+    BS.DrawBoard()
+    # sleep(15)
+    BS.AbsoluteMove(20,20)
+    sleep(5)
+    recognizer.StartListen(callBack)
     global model
     assert os.path.exists("/home/aa/graduation project/CNCProject/Modes/TicTacToe/data/model.h5"), '{} does not exist'
     model = load_model("/home/aa/graduation project/CNCProject/Modes/TicTacToe/data/model.h5")
