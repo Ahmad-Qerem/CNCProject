@@ -53,8 +53,10 @@ class Bluetooth:
         print(GRBLOut.strip().decode("utf-8"))
 
     def SendList(self,List):
-        pass
-    
+        for command in List:
+            self.SendCommandToCnc(command)
+        
+
     def SendPositionToCnc(self, X=0, Y=0):
         if (self.XVal+X) < 10 or (self.XVal+X) > 800:
             print("Out Of Range X")

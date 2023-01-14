@@ -157,7 +157,7 @@ def play(vcap):
                         color=(0, 0, 255), thickness=2)
             except Exception as e :
                 continue
-            
+
         # Now working with 'paper' to find grid
         paper_gray = cv2.cvtColor(paper, cv2.COLOR_BGR2GRAY)
         _, paper_thresh = cv2.threshold(
@@ -249,7 +249,7 @@ def RunGame(path):
     # sleep(15)
     BS.AbsoluteMove(20,20)
     sleep(5)
-    recognizer.StartListen(callBack)
+    #recognizer.StartListen(callBack)
     global model
     assert os.path.exists("/home/aa/graduation project/CNCProject/Modes/TicTacToe/data/model.h5"), '{} does not exist'
     model = load_model("/home/aa/graduation project/CNCProject/Modes/TicTacToe/data/model.h5")
