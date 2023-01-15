@@ -4,7 +4,6 @@ from Utils.SerialBluetooth import Bluetooth
 from Modes.Mode1 import Mode1
 from Modes.Mode2 import Mode2
 from Modes.Mode3 import Mode3
-from Modes.TicTacToe.play import RunGame,SetBluetooth
 
 Mode1STR = ["mode 1", "mode one", "mod one",
             "mod 1", "mod1", "mud1", "mud 1","mud run",
@@ -28,21 +27,17 @@ def callBack(recognizer, audio):
         print(word)
         if (word in Mode1STR):
             GyroMode = Mode1(BluetoothSerial)
-            #with Mode1(BluetoothSerial) as GyroMode1:
-            #    GyroMode1.GyroscopeToCnc()
             GyroMode.GyroscopeToCnc()
             del GyroMode
             recognizer.StartListen(callBack)
         elif (word in Mode2STR):
-            #XOMode = Mode2(BluetoothSerial)
-            #XOMode.RunGame('http://192.168.1.2:8080/video')
-            #del XOMode
-            SetBluetooth(BluetoothSerial)
-            RunGame('http://192.168.1.7:8080/video')
+            XOMode = Mode2(BluetoothSerial)
+            XOMode.start()
+            del XOMode
         elif (word in Mode3STR):
             WriteMode = Mode3(BluetoothSerial)
             WriteMode.ActiveMode3(BluetoothSerial)
-
+            del WriteMode
         elif word == "exit":
             BluetoothSerial.Disconnect()
             recognizer.StopListen()
@@ -50,10 +45,6 @@ def callBack(recognizer, audio):
         else:
             print("Something ...")
 
-    except IndexError:
-        print("no internet connection")   
-    except LookupError:
-        print("Could not understand audio")
     except Exception as e:
         print("error in callback ")
         print("Error"+str(e))

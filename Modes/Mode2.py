@@ -1,234 +1,264 @@
-from keras.models import load_model
-import numpy as np
-import cv2
-import os
+from math import inf
+from time import sleep
 import sys
-from Modes.TicTacToe.alphabeta import Tic,get_enemy,determine
-from Modes.TicTacToe.utils import detections
-from Modes.TicTacToe.utils import imutils
+from random import choice
 sys.path.append('/home/aa/graduation project/CNCProject/Utils')
 from Utils.Recognizer import Recognizer
 
-class Mode2:
+one = ['one', '1', 'won', 'Wayne']
+two = ['tool', 'two', 'too', 'Tool', '2',]
+three = ['three', '3', 'free', 'III']
+four = ['four', '4', 'for', '']
+five = ['five', '5', 'life', 'fight', 'Fife',]
+six = ['six', '6', 'sex']
+seven = ['seven', '7', 'oven', 'surgeon', 'Susan', 'season', 'session']
+eight = ['eight', '8', 'it']
+nine = ['nine', '9', '9:00', 'Line']
 
-    def __init__(self, BluetoothSerial):
-        self.BS = BluetoothSerial
+
+class Mode2:
+    def __init__(self):
         self.recognizer = Recognizer()
-        self.Word=""
-        self.FlagEndGame=False
-        self.FlagTurn=False
+        self.Word = ""
+        self.board = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+        self.FlagEndGame = False
+        self.Done = False
+        self.Index = 4
+        self.Row = 2
+        self.Col = 2
+
         print("New Mode2 Object Has been created ")
 
     def callBack(self, recognizer, audio):
         print("callBack Mode2")
         try:
-            self.word = recognizer.recognize_google(
-                audio_data=audio, key=None, language='en-US')
-            if self.word == "your turn":
-                self.FlagTurn=True
-            elif self.word == "disconnect":
-                self.FlagEndGame=True
-                self.recognizer.StopListen()
+
+            word = recognizer.recognize_google(
+                audio, key=None, language='en-US')
+            word = word.split(' ')[1]
+
+            print("THE WORD IS : "+word)
+            if word in one:
+                self.Index = 1
+                self.Done = True
+            elif word in two:
+                self.Index = 2
+                self.Done = True
+            elif word in three:
+                self.Index = 3
+                self.Done = True
+            elif word in four:
+                self.Index = 4
+                self.Done = True
+            elif word in five:
+                self.Index = 5
+                self.Done = True
+            elif word in six:
+                self.Index = 6
+                self.Done = True
+            elif word in seven:
+                self.Index = 7
+                self.Done = True
+            elif word in eight:
+                self.Index = 8
+                self.Done = True
+            elif word in nine:
+                self.Index = 9
+                self.Done = True
+            elif word == "disconnect":
+                self.FlagEndGame = True
+                recognizer.StopListen()
             else:
                 print(" Something ... Mode 2")
 
-        except IndexError:
-            print("no internet connection")
-        except LookupError:
-            print("Could not understand audio")
         except Exception as e:
             print("error in callback mode 2")
             print("Error"+str(e))
 
+    def Gameboard(self, board):
+        chars = {1: 'X', -1: 'O', 0: ' '}
+        for x in board:
+            for y in x:
+                ch = chars[y]
+                print(f'| {ch} |', end='')
+            print('\n' + '---------------')
+        print('===============')
 
-    def find_sheet_paper(frame, thresh, add_margin=True):
-            """Detect the coords of the sheet of paper the game will be played on"""
-            stats = detections.find_corners(thresh)
-            # First point is center of coordinate system, so ignore it
-            # We only want sheet of paper's corners
-            corners = stats[1:, :2]
-            corners = imutils.order_points(corners)
-            # Get bird view of sheet of paper
-            paper = imutils.four_point_transform(frame, corners)
-            if add_margin:
-                paper = paper[10:-10, 10:-10]
-            return paper, corners
+    def Clearboard(self, board):
+        for x, row in enumerate(board):
+            for y, col in enumerate(row):
+                board[x][y] = 0
 
+    def winningPlayer(self, board, player):
+        conditions = [[board[0][0], board[0][1], board[0][2]],
+                      [board[1][0], board[1][1], board[1][2]],
+                      [board[2][0], board[2][1], board[2][2]],
+                      [board[0][0], board[1][0], board[2][0]],
+                      [board[0][1], board[1][1], board[2][1]],
+                      [board[0][2], board[1][2], board[2][2]],
+                      [board[0][0], board[1][1], board[2][2]],
+                      [board[0][2], board[1][1], board[2][0]]]
 
-    def find_shape(cell):
-        """Is shape and X or an O?"""
-        mapper = {0: None, 1: 'X', 2: 'O'}
-        cell = detections.preprocess_input(cell)
-        idx = np.argmax(model.predict(cell))
-        return mapper[idx]
+        if [player, player, player] in conditions:
+            return True
 
+        return False
 
-    def get_board_template(thresh):
-        """Returns 3 x 3 grid, a.k.a the board"""
-        # Find grid's center cell, and based on it fetch
-        # the other eight cells
-        middle_center = detections.contoured_bbox(thresh)
-        center_x, center_y, width, height = middle_center
+    def gameWon(self, board):
+        return self.winningPlayer(board, 1) or self.winningPlayer(board, -1)
 
-        # Useful coords
-        left = center_x - width
-        right = center_x + width
-        top = center_y - height
-        bottom = center_y + height
+    def printResult(self, board):
+        if self.winningPlayer(board, 1):
+            print('X has won! ' + '\n')
 
-        # Middle row
-        middle_left = (left, center_y, width, height)
-        middle_right = (right, center_y, width, height)
-        # Top row
-        top_left = (left, top, width, height)
-        top_center = (center_x, top, width, height)
-        top_right = (right, top, width, height)
-        # Bottom row
-        bottom_left = (left, bottom, width, height)
-        bottom_center = (center_x, bottom, width, height)
-        bottom_right = (right, bottom, width, height)
+        elif self.winningPlayer(board, -1):
+            print('O\'s have won! ' + '\n')
 
-        # Grid's coordinates
-        return [top_left, top_center, top_right,
-                middle_left, middle_center, middle_right,
-                bottom_left, bottom_center, bottom_right]
+        else:
+            print('Draw' + '\n')
 
+    def blanks(self, board):
+        blank = []
+        for x, row in enumerate(board):
+            for y, col in enumerate(row):
+                if board[x][y] == 0:
+                    blank.append([x, y])
 
-    def draw_shape(self,template, shape, coords):
-        """Draw on a cell the shape which resides in it"""
-        x, y, w, h = coords
-        print('X = {} , Y = {} , width = {} , Hight = {}', x, y, w, h)
-        if shape == 'O':
-            centroid = (x + int(w / 2), y + int(h / 2))
-            # self.BS.DrawCircle(x,y)
-            cv2.circle(template, centroid, 10, (0, 0, 0), 2)
-        elif shape == 'X':
-            # Draws the 'X' shape
-            cv2.line(template, (x + 10, y + 7), (x + w - 10, y + h - 7),
-                    (0, 0, 0), 2)
-            cv2.line(template, (x + 10, y + h - 7), (x + w - 10, y + 7),
-                    (0, 0, 0), 2)
-            #self.BS.DrawX(x, y)
-        return template
+        return blank
 
+    def boardFull(self, board):
+        if len(self.blanks(board)) == 0:
+            return True
+        return False
 
-    def play(self,vcap):
-        """Play tic tac toe game with computer that uses the alphabeta algorithm"""
-        # Initialize opponent (computer)
-        board = Tic()
-        history = {}
-        message = True
-        # Draw Board
-        # self.BS.CncHome()
-        # self.BS.DrawBoard()
-        self.recognizer.StartListen(self.callBack)
+    def setMove(self, board, x, y, player):
+        board[x][y] = player
 
-        # Start playing
-        while True:
-            ret, frame = vcap.read()
-            key = cv2.waitKey(1) & 0xFF
-            if not ret:
-                print('[INFO] finished video processing')
-                break
-
-            # Stop
-            if key == ord('q') or self.FlagEndGame:
-                print('[INFO] stopped video processing')
-                break
-
-            # Preprocess input
-            # frame = imutils.resize(frame, 500)
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            _, thresh = cv2.threshold(gray, 170, 255, cv2.THRESH_BINARY)
-            thresh = cv2.GaussianBlur(thresh, (7, 7), 0)
-            paper, corners = self.find_sheet_paper(frame, thresh)
-            # Four red dots must appear on each corner of the sheet of paper,
-            # otherwise try moving it until they're well detected
-            for c in corners:
-                point = (int(c[0]), int(c[1]))
-                cv2.circle(img=frame, center=point, radius=2,
-                        color=(0, 0, 255), thickness=2)
-            # Now working with 'paper' to find grid
-            paper_gray = cv2.cvtColor(paper, cv2.COLOR_BGR2GRAY)
-            _, paper_thresh = cv2.threshold(
-                paper_gray, 170, 255, cv2.THRESH_BINARY_INV)
-            grid = self.get_board_template(paper_thresh)
-
-            # Draw grid and wait until user makes a move
-            for i, (x, y, w, h) in enumerate(grid):
-                cv2.rectangle(paper, (x, y), (x + w, y + h), (0, 0, 0), 2)
-                if history.get(i) is not None:
-                    shape = history[i]['shape']
-                    paper = self.draw_shape(paper, shape, (x, y, w, h))
-
-            # Make move
-            if message:
-                print('Make move, then press spacebar')
-                message = False
-            #if not key == 32 or not self.FlagTurn:
-            if not key == 32:
-                cv2.imshow('original', frame)
-                cv2.imshow('bird view', paper)
-                continue
-            player = 'X'
-
-            # User's time to play, detect for each available cell
-            # where has he played
-            available_moves = np.delete(np.arange(9), list(history.keys()))
-            for i, (x, y, w, h) in enumerate(grid):
-                if i not in available_moves:
-                    continue
-                # Find what is inside each free cell
-                cell = paper_thresh[int(y): int(y + h), int(x): int(x + w)]
-                shape = self.find_shape(cell)
-                if shape is not None:
-                    history[i] = {'shape': shape, 'bbox': (x, y, w, h)}
-                    board.make_move(i, player)
+    def playerMove(self, board):
+        e = True
+        moves = {1: [0, 0], 2: [0, 1], 3: [0, 2],
+                 4: [1, 0], 5: [1, 1], 6: [1, 2],
+                 7: [2, 0], 8: [2, 1], 9: [2, 2]}
+        while e:
+            try:
+                # move = int(input('Enter a number between 1-9: '))
+                print('Enter a number between 1-9: ')
+                while not self.Done:
+                    sleep(0.5)
+                self.Done = False
+                move = self.Index
+                if move < 1 or move > 9:
+                    print('Invalid Move! Try again!')
+                elif not (moves[move] in self.blanks(board)):
+                    print('Invalid Move! Try again!')
                 else:
-                    ######################## drow nums 
-                    pass    
-                paper = self.draw_shape(paper, shape, (x, y, w, h))
+                    self.setMove(board, moves[move][0], moves[move][1], 1)
+                    self.Gameboard(board)
+                    e = False
+            except (KeyError, ValueError):
+                print('Enter a number!')
 
-            # Check whether game has finished
-            if board.complete():
-                break
+    def getScore(self, board):
+        if self.winningPlayer(board, 1):
+            return 10
 
-            # Computer's time to play
-            player = get_enemy(player)
-            computer_move = determine(board, player)
-            board.make_move(computer_move, player)
-            history[computer_move] = {'shape': 'O', 'bbox': grid[computer_move]}
-            paper = self.draw_shape(paper, 'O', grid[computer_move])
+        elif self.winningPlayer(board, -1):
+            return -10
 
-            # Check whether game has finished
-            if board.complete():
-                break
+        else:
+            return 0
 
-            # Show images
-            cv2.imshow('original', frame)
-            # cv2.imshow('thresh', paper_thresh)
-            cv2.imshow('bird view', paper)
-            message = True
+    def abminimax(self, board, depth, alpha, beta, player):
+        row = -1
+        col = -1
+        if depth == 0 or self.gameWon(board):
+            return [row, col, self.getScore(board)]
 
-        # Show winner
-        winner = board.winner()
-        height = paper.shape[0]
-        text = 'Winner is {}'.format(str(winner))
-        cv2.putText(paper, text, (10, height - 10),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
-        cv2.imshow('bird view', paper)
-        cv2.waitKey(0) & 0xFF
+        else:
+            for cell in self.blanks(board):
+                self.setMove(board, cell[0], cell[1], player)
+                score = self.abminimax(board, depth - 1, alpha, beta, -player)
+                if player == 1:
+                    # X is always the max player
+                    if score[2] > alpha:
+                        alpha = score[2]
+                        row = cell[0]
+                        col = cell[1]
 
-        # Close windows
-        vcap.release()
-        cv2.destroyAllWindows()
-        return board.winner()
+                else:
+                    if score[2] < beta:
+                        beta = score[2]
+                        row = cell[0]
+                        col = cell[1]
+
+                self.setMove(board, cell[0], cell[1], 0)
+
+                if alpha >= beta:
+                    break
+
+            if player == 1:
+                return [row, col, alpha]
+
+            else:
+                return [row, col, beta]
+
+    def o_comp(self, board):
+        if len(self.blanks(board)) == 9:
+            x = choice([0, 1, 2])
+            y = choice([0, 1, 2])
+            self.setMove(board, x, y, -1)
+            self.Gameboard(board)
+
+        else:
+            result = self.abminimax(
+                board, len(self.blanks(board)), -inf, inf, -1)
+            self.setMove(board, result[0], result[1], -1)
+            self.Gameboard(board)
+
+    def x_comp(self, board):
+        if len(self.blanks(board)) == 9:
+            x = choice([0, 1, 2])
+            y = choice([0, 1, 2])
+            self.setMove(board, x, y, 1)
+            self.Gameboard(board)
+
+        else:
+            result = self.abminimax(board, len(
+                self.blanks(board)), -inf, inf, 1)
+            self.setMove(board, result[0], result[1], 1)
+            self.Gameboard(board)
+
+    def makeMove(self, board, player, mode):
+        if mode == 1:
+            if player == 1:
+                self.playerMove(board)
+
+            else:
+                self.o_comp(board)
+        else:
+            if player == 1:
+                self.o_comp(board)
+            else:
+                self.x_comp(board)
+
+    def pvc(self):
+        order = choice([1, 2])
+        board = self.board
+        self.Clearboard(board)
+
+        if order == 2:
+            currentPlayer = -1
+        else:
+            currentPlayer = 1
+        self.recognizer.StartListen(self.callBack)
+        while not (self.boardFull(self.board) or self. gameWon(self.board) or self.FlagEndGame):
+            self.makeMove(self.board, currentPlayer, 1)
+            currentPlayer *= -1
+
+        self.printResult(self.board)
+        self.recognizer.StopListen()
 
 
-    def RunGame(self,path):
-        global model
-        assert os.path.exists("/home/aa/graduation project/CNCProject/Modes/TicTacToe/data/model.h5"), '{} does not exist'
-        model = load_model("/home/aa/graduation project/CNCProject/Modes/TicTacToe/data/model.h5")
-        vcap = cv2.VideoCapture(path)
-        winner = self.play(vcap)
-        print('Winner is:', winner)
+
+
+
