@@ -17,7 +17,8 @@ nine = ['nine', '9', '9:00', 'Line']
 
 
 class Mode2:
-    def __init__(self):
+    def __init__(self, BluetoothSerial):
+        self.BS = BluetoothSerial
         self.recognizer = Recognizer()
         self.Word = ""
         self.board = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
@@ -153,6 +154,8 @@ class Mode2:
                     print('Invalid Move! Try again!')
                 else:
                     self.setMove(board, moves[move][0], moves[move][1], 1)
+                    self.BS.DrawMove('X', moves[move][0], moves[move][1])
+
                     self.Gameboard(board)
                     e = False
             except (KeyError, ValueError):
@@ -207,12 +210,15 @@ class Mode2:
             x = choice([0, 1, 2])
             y = choice([0, 1, 2])
             self.setMove(board, x, y, -1)
+            self.BS.DrawMove('O', x, y)
+
             self.Gameboard(board)
 
         else:
             result = self.abminimax(
                 board, len(self.blanks(board)), -inf, inf, -1)
             self.setMove(board, result[0], result[1], -1)
+            self.BS.DrawMove('O', result[0], result[1])
             self.Gameboard(board)
 
     def x_comp(self, board):
@@ -220,12 +226,16 @@ class Mode2:
             x = choice([0, 1, 2])
             y = choice([0, 1, 2])
             self.setMove(board, x, y, 1)
+            self.BS.DrawMove('X', result[0], result[1])
+
             self.Gameboard(board)
 
         else:
             result = self.abminimax(board, len(
                 self.blanks(board)), -inf, inf, 1)
             self.setMove(board, result[0], result[1], 1)
+            self.BS.DrawMove('X', result[0], result[1])
+
             self.Gameboard(board)
 
     def makeMove(self, board, player, mode):
@@ -250,6 +260,8 @@ class Mode2:
             currentPlayer = -1
         else:
             currentPlayer = 1
+        self.BS.DrawBoard()
+        self.BS.AbsoluteMove(40,40)
         self.recognizer.StartListen(self.callBack)
         while not (self.boardFull(self.board) or self. gameWon(self.board) or self.FlagEndGame):
             self.makeMove(self.board, currentPlayer, 1)

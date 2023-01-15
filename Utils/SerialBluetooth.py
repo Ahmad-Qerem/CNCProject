@@ -15,9 +15,10 @@ class Bluetooth:
         print("New Bluetooth Object Has been created ")
 
 
-    def DrawMove(self,Player='O',Index=0):
+    def DrawMove(self,Player='O',I=0,J=0):
+        index =(I-1) * 3 + (J-1)
         Offset=10
-        X,Y = self.BoardPositions[Index]
+        X, Y = self.BoardPositions[index]
         X2, Y2 = X+Offset, Y+Offset
         if Player == 'O':
             self.AbsoluteMove(X2,Y2)
@@ -29,7 +30,7 @@ class Bluetooth:
                 '/home/aa/graduation project/CNCProject/Utils/draw_x.g')
             
         sleep(1)    
-        self.AbsoluteMove(20,20)
+        self.AbsoluteMove(40,40)
         
     def ConnectBlueTooth(self):
         try:
