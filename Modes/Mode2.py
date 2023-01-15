@@ -75,12 +75,14 @@ class Mode2:
         except Exception as e:
             print("error in callback mode 2")
             print("Error"+str(e))
-
+    
     def Gameboard(self, board):
         chars = {1: 'X', -1: 'O', 0: ' '}
-        for x in board:
-            for y in x:
-                ch = chars[y]
+        for i in range(1,4):
+            for j in range(1,4):
+                ch = chars[board[i-1][j-1]]
+                if (ch==' '):
+                    ch = ((i-1) * 3 + (j-1))+1
                 print(f'| {ch} |', end='')
             print('\n' + '---------------')
         print('===============')
