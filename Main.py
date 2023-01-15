@@ -32,11 +32,11 @@ def callBack(recognizer, audio):
             recognizer.StartListen(callBack)
         elif (word in Mode2STR):
             XOMode = Mode2(BluetoothSerial)
-            XOMode.start()
+            XOMode.pvc()
             del XOMode
         elif (word in Mode3STR):
             WriteMode = Mode3(BluetoothSerial)
-            WriteMode.ActiveMode3(BluetoothSerial)
+            WriteMode.ActiveMode3()
             del WriteMode
         elif word == "exit":
             BluetoothSerial.Disconnect()

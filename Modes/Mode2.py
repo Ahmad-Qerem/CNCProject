@@ -262,6 +262,7 @@ class Mode2:
             currentPlayer = -1
         else:
             currentPlayer = 1
+        self.BS.CncHome()
         self.BS.DrawBoard()
         self.BS.AbsoluteMove(40,40)
         self.recognizer.StartListen(self.callBack)
