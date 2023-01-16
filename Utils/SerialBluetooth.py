@@ -16,7 +16,10 @@ class Bluetooth:
 
 
     def DrawMove(self,Player='O',I=0,J=0):
-        index =(I-1) * 3 + (J-1)
+        index =(I) * 3 + (J)
+        print("This is I" + str(I))
+        print("This is J" + str(J))
+        print("This is Index"+ str(index))
         Offset=10
         X, Y = self.BoardPositions[index]
         X2, Y2 = X+Offset, Y+Offset
