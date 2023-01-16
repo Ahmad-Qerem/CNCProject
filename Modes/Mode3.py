@@ -1,6 +1,6 @@
 
 from Utils.Recognizer import Recognizer
-# from ttgLib.TextToGcode import ttg
+from ttgLib.TextToGcode import ttg
 from time import sleep
 
 class Mode3:
@@ -20,17 +20,34 @@ class Mode3:
                 #     "M5", "M3S90", "G0", "G1")
                 # print(Data)
                 # self.BS.SendList(Data)
-                if self.word == "disconnect":
-                    self.recognizer.StopListen()
-                else:
-                    for letter in word:
-                        if letter.islower:
-                            self.SendGCode('/home/aa/graduation project/CNCProject/Utils/ascii_gcode/lowercase/'+str(letter)+'.nc')
-                        elif letter.isupper:
-                            self.SendGCode('/home/aa/graduation project/CNCProject/Utils/ascii_gcode/uppercase/'+str(letter)+'.nc')
-                        elif letter.isdigit:
-                            self.SendGCode('/home/aa/graduation project/CNCProject/Utils/ascii_gcode/numbers/'+str(letter)+'.nc')
-                    print(" Something ... Mode 3")
+                # if self.word == "disconnect":
+                #     self.recognizer.StopListen()
+                # else:
+                X=20
+                Y=20
+                # self.BS.CncHome()
+                self.BS.AbsoluteMove(X,Y)
+                for letter in word:
+                    print("this is letter "+str(letter))
+                    Data = ttg(letter, 5, 0, "return", 6000).toGcode(
+                              "M5", "M3S90", "G0", "G1")
+                    self.BS.SendList(Data)
+                    X=X+20
+                    self.BS.AbsoluteMove(X,Y)
+                    sleep(2)
+                    # if letter.islower:
+                    #     print("this is letter "+str(letter))
+                    #     self.BS.DrawLetter('/home/aa/graduation project/CNCProject/Utils/ascii_gcode/lowercase/'+str(letter)+'.nc')
+                    #     # self.SendGCode('/home/aa/graduation project/CNCProject/Utils/ascii_gcode/lowercase/'+str(letter)+'.nc')
+                    # elif letter.isupper:
+                    #     print("this is letter "+str(letter))
+                    #     self.BS.DrawLetter('/home/aa/graduation project/CNCProject/Utils/ascii_gcode/uppercase/'+str(letter)+'.nc')
+                    #     # self.SendGCode('/home/aa/graduation project/CNCProject/Utils/ascii_gcode/uppercase/'+str(letter)+'.nc')
+                    # elif letter.isdigit:
+                    #     print("this is letter "+str(letter))
+                    #     self.BS.DrawLetter('/home/aa/graduation project/CNCProject/Utils/ascii_gcode/numbers/'+str(letter)+'.nc')
+                    #     # self.SendGCode('/home/aa/graduation project/CNCProject/Utils/ascii_gcode/numbers/'+str(letter)+'.nc')
+                print(" Something ... Mode 3")
             # sleep(30)
         except IndexError:
             print("no internet connection")

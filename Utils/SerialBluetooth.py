@@ -96,6 +96,13 @@ class Bluetooth:
     def DrawBoard(self):
         self.SendGCode('/home/aa/graduation project/CNCProject/Utils/boardV2.g')
 
+    def DrawLetter(self,url):
+        self.SendCommandToCnc("$X")
+        self.PenDown()
+        self.SendCommandToCnc("G1F4000")
+        self.SendGCode(url)
+        self.PenRaise()
+
     def AbsoluteMove(self,X,Y):
         self.XVal=X
         self.YVal=Y
