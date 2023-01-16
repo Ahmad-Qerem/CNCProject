@@ -59,6 +59,7 @@ class Bluetooth:
     def SendList(self,List):
         for command in List:
             self.SendCommandToCnc(command)
+            sleep(0.3)
         
 
     def SendPositionToCnc(self, X=0, Y=0):
