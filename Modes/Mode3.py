@@ -13,12 +13,13 @@ class Mode3:
         print("callBack Mode3")
         try:
             word = recognizer.recognize_google(audio_data=audio, key=None, language='en-US')
-            if word:
-                print(word)
-                Data = ttg(word, 5, 0, "return", 6000).toGcode(
-                    "M5", "M3S90", "G0", "G1")
-                print(Data)
-                self.BS.SendList(Data)
+            print("this is type of word : "+str(type(word)))
+            if isinstance(word,str):
+                # print(word)
+                # Data = ttg("yes", 5, 0, "return", 6000).toGcode(
+                #     "M5", "M3S90", "G0", "G1")
+                # print(Data)
+                # self.BS.SendList(Data)
                 if self.word == "disconnect":
                     self.recognizer.StopListen()
                 else:
