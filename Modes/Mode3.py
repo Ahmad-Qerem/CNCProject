@@ -1,6 +1,6 @@
 
 from Utils.Recognizer import Recognizer
-from ttgLib.TextToGcode import ttg
+# from ttgLib.TextToGcode import ttg
 from time import sleep
 
 class Mode3:
@@ -23,6 +23,13 @@ class Mode3:
                 if self.word == "disconnect":
                     self.recognizer.StopListen()
                 else:
+                    for letter in word:
+                        if letter.islower:
+                            self.SendGCode('/home/aa/graduation project/CNCProject/Utils/ascii_gcode/lowercase/'+str(letter)+'.nc')
+                        elif letter.isupper:
+                            self.SendGCode('/home/aa/graduation project/CNCProject/Utils/ascii_gcode/uppercase/'+str(letter)+'.nc')
+                        elif letter.isdigit:
+                            self.SendGCode('/home/aa/graduation project/CNCProject/Utils/ascii_gcode/numbers/'+str(letter)+'.nc')
                     print(" Something ... Mode 3")
             # sleep(30)
         except IndexError:
