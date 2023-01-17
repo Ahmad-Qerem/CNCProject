@@ -12,7 +12,7 @@ Mode1STR = ["mode 1", "mode one", "mod one",
             "smart 1", "smart1", "hello"]
 
 Mode2STR = ["mode 2", "mode two", "mod two",
-            "mod 2", "mod2", "mud2", "mud 2", "hi"]
+            "mod 2", "mod2", "mud2", "mud 2"]
 
 Mode3STR = ["mode 3", "mode three", "mod three",
             "mod 3", "mod3", "mud3", "mud 3"]
@@ -32,11 +32,11 @@ def callBack(recognizer, audio):
             recognizer.StartListen(callBack)
         elif (word in Mode2STR):
             XOMode = Mode2(BluetoothSerial)
-            XOMode.start()
+            XOMode.pvc()
             del XOMode
         elif (word in Mode3STR):
             WriteMode = Mode3(BluetoothSerial)
-            WriteMode.ActiveMode3(BluetoothSerial)
+            WriteMode.ActiveMode3()
             del WriteMode
         elif word == "exit":
             BluetoothSerial.Disconnect()

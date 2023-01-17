@@ -16,7 +16,10 @@ class Bluetooth:
 
 
     def DrawMove(self,Player='O',I=0,J=0):
-        index =(I-1) * 3 + (J-1)
+        index =(I) * 3 + (J)
+        print("This is I" + str(I))
+        print("This is J" + str(J))
+        print("This is Index"+ str(index))
         Offset=10
         X, Y = self.BoardPositions[index]
         X2, Y2 = X+Offset, Y+Offset
@@ -32,6 +35,44 @@ class Bluetooth:
         sleep(1)    
         self.AbsoluteMove(40,40)
         
+    def DrawWinLine(self,GroupIndex):
+
+        if GroupIndex == 0:
+            i = 0 
+            j = 2
+        elif GroupIndex == 1:
+            i = 3
+            j = 5
+        elif GroupIndex == 2:
+            i = 6
+            j = 8
+        elif GroupIndex == 3:
+            i = 0
+            j = 6
+        elif GroupIndex == 4:
+            i = 1
+            j = 7
+        elif GroupIndex == 5:
+            i = 2
+            j = 8
+        elif GroupIndex == 6:
+            i = 0
+            j = 8
+        elif GroupIndex == 7:
+            i = 2
+            j = 6
+
+
+        X1, Y1 = self.BoardPositions[i]
+        X2, Y2 = self.BoardPositions[j]
+        self.PenRaise()
+        self.AbsoluteMove(X1,Y1)
+        self.PenDown()
+        command = f'G1 X{X2} Y{Y2} F2000'
+        self.SendCommandToCnc(command)
+        self.PenRaise()
+        self.AbsoluteMove(40,40)
+
     def ConnectBlueTooth(self):
         try:
             self.BlueToothSerial = serial.Serial("/dev/rfcomm0", 115200)
@@ -56,6 +97,7 @@ class Bluetooth:
     def SendList(self,List):
         for command in List:
             self.SendCommandToCnc(command)
+            sleep(0.3)
         
 
     def SendPositionToCnc(self, X=0, Y=0):
@@ -92,6 +134,13 @@ class Bluetooth:
 
     def DrawBoard(self):
         self.SendGCode('/home/aa/graduation project/CNCProject/Utils/boardV2.g')
+
+    def DrawLetter(self,url):
+        self.SendCommandToCnc("$X")
+        self.PenDown()
+        self.SendCommandToCnc("G1F4000")
+        self.SendGCode(url)
+        self.PenRaise()
 
     def AbsoluteMove(self,X,Y):
         self.XVal=X

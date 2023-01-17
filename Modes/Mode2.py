@@ -106,9 +106,31 @@ class Mode2:
             return True
 
         return False
+    
+    def winningPlayerV2(self, board, player):
+        conditions = [[board[0][0], board[0][1], board[0][2]],
+                      [board[1][0], board[1][1], board[1][2]],
+                      [board[2][0], board[2][1], board[2][2]],
+                      [board[0][0], board[1][0], board[2][0]],
+                      [board[0][1], board[1][1], board[2][1]],
+                      [board[0][2], board[1][2], board[2][2]],
+                      [board[0][0], board[1][1], board[2][2]],
+                      [board[0][2], board[1][1], board[2][0]]]
+        data =[player, player, player] 
+        if data in conditions:
+            index = conditions.index(data)
+            self.BS.DrawWinLine(index)
+            return True
+
+        return False
 
     def gameWon(self, board):
         return self.winningPlayer(board, 1) or self.winningPlayer(board, -1)
+
+    def gameWonV2(self, board):
+        if not self.winningPlayerV2(board, 1):
+            self.winningPlayerV2(board, -1)
+
 
     def printResult(self, board):
         if self.winningPlayer(board, 1):
@@ -262,13 +284,14 @@ class Mode2:
             currentPlayer = -1
         else:
             currentPlayer = 1
+        self.BS.CncHome()
         self.BS.DrawBoard()
         self.BS.AbsoluteMove(40,40)
         self.recognizer.StartListen(self.callBack)
-        while not (self.boardFull(self.board) or self. gameWon(self.board) or self.FlagEndGame):
+        while not (self.boardFull(self.board) or self.gameWon(self.board) or self.FlagEndGame):
             self.makeMove(self.board, currentPlayer, 1)
             currentPlayer *= -1
-
+        self.gameWonV2(self.board)
         self.printResult(self.board)
         self.recognizer.StopListen()
 
