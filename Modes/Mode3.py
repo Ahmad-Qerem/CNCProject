@@ -19,6 +19,7 @@ class Mode3:
             if isinstance(word,str):
                 if word == "disconnect":
                     self.recognizer.StopListen()
+                    self.ExitFlag=True
                 else:
                     Data = ttg(word, 5, 0, "return", 6000).toGcode(
                         "M5", "M3S90", "G0", "G1")
@@ -34,7 +35,7 @@ class Mode3:
             print("Error"+str(e))
 
     def ActiveMode3(self):
-        self.recognizer.StartListen()
+        self.recognizer.StartListen(self.callBack)
         while not self.ExitFlag:
             sleep(0.5)
 

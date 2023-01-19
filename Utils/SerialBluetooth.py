@@ -20,15 +20,15 @@ class Bluetooth:
         print("This is I" + str(I))
         print("This is J" + str(J))
         print("This is Index"+ str(index))
-        Offset=20
+        Offset=10
         X, Y = self.BoardPositions[index]
         X2, Y2 = X+Offset, Y+Offset
         if Player == 'O':
-            self.AbsoluteMove(X2,Y2)
+            self.AbsoluteMove(X2,Y2+10)
             self.SendGCode(
                 '/home/aa/graduation project/CNCProject/Utils/draw_o.g')
         else :
-            self.AbsoluteMove(X+10, Y+10)
+            self.AbsoluteMove(X, Y+10)
             self.SendGCode(
                 '/home/aa/graduation project/CNCProject/Utils/draw_x.g')
             
@@ -66,9 +66,9 @@ class Bluetooth:
         X1, Y1 = self.BoardPositions[i]
         X2, Y2 = self.BoardPositions[j]
         self.PenRaise()
-        self.AbsoluteMove(X1+20,Y1+20)
+        self.AbsoluteMove(X1,Y1+20)
         self.PenDown()
-        command = f'G1 X{X2+20} Y{Y2+20} F2000'
+        command = f'G1 X{X2} Y{Y2+20} F2000'
         self.SendCommandToCnc(command)
         self.PenRaise()
         self.AbsoluteMove(40,40)
