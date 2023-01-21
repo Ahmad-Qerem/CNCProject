@@ -29,7 +29,7 @@ def callBack(recognizer, audio):
             GyroMode = Mode1(BluetoothSerial)
             GyroMode.GyroscopeToCnc()
             del GyroMode
-            recognizer.StartListen(callBack)
+            
         elif (word in Mode2STR):
             XOMode = Mode2(BluetoothSerial)
             XOMode.pvc()

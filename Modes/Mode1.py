@@ -5,7 +5,7 @@ from AngleMeterO.AngleMeterO import AngleMeter
 from Recognizer import Recognizer
 class Mode1:
     disconnect = ['disconnect']
-    start = ['start','hello','down']
+    start = ['start','down']
     stop = ['stop','up']
     home = ['home']
 
@@ -15,12 +15,10 @@ class Mode1:
         self.Flag = False
         self.PenFlag= True
         self.Sent=True
-        self.recognizer.StartListen(self.callBack)
         print("New Mode1 Object Has been created ")
 
     def callBack(self, recognizer, audio):
         print("callBack Mode1")
-
         try:
             word = recognizer.recognize_google(
                 audio_data=audio, key=None, language='en-US')
@@ -32,11 +30,6 @@ class Mode1:
             elif word in self.stop :
                 self.PenFlag = False
                 self.Sent=False
-
-            elif word == 'slow':
-                pass
-            elif word == 'fast':
-                pass
                 
             elif word in self.home :
                 self.Flag = True
@@ -48,10 +41,7 @@ class Mode1:
                 self.Flag = True
             else:
                 print(" Something ... Mode 1")
-        except IndexError:
-            print("no internet connection")
-        except LookupError:
-            print("Could not understand audio")
+
         except Exception as e:
             print("error in callback ")
             print("Error"+str(e))
@@ -83,6 +73,8 @@ class Mode1:
         xPosition = "ideal"
         yPosition = "ideal"
         self.BS.CncHome()
+        self.recognizer.StartListen(self.callBack)
+
         while True:
             if self.Flag:
                 break
