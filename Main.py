@@ -4,7 +4,7 @@ from Utils.SerialBluetooth import Bluetooth
 from Modes.Mode1 import Mode1
 from Modes.Mode2 import Mode2
 from Modes.Mode3 import Mode3
-
+#To improve speech recognition accuracy
 Mode1STR = ["mode 1", "mode one", "mod one",
             "mod 1", "mod1", "mud1", "mud 1","mud run",
             "Baldwin", "mullet one", "Northland", "Multan",
@@ -18,7 +18,7 @@ Mode3STR = ["mode 3", "mode three", "mod three",
             "mod 3", "mod3", "mud3", "mud 3"]
 
 BluetoothSerial = Bluetooth()
-
+# What to do in mic listener thread
 def callBack(recognizer, audio):
     print("callBack Main")
     try:
