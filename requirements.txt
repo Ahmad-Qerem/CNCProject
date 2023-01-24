@@ -2,3 +2,7 @@
 SpeechRecognition
 python3-pyaudio
 flac
+numpy
+opencv-contrib-python
+sumbus
+ttg
