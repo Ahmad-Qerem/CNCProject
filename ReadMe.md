@@ -1,6 +1,6 @@
 # Hardware project for computer engineering degree
 
-## Nowadays, CNC machines are most widely used for many applications “cutting,
+Nowadays, CNC machines are most widely used for many applications “cutting,
 drawing, etc ...” and to give solutions to people who want to do remote writing
 from this standpoint our Idea was launched.
 In our graduation project, we will build a machine that is more like a CNC that
